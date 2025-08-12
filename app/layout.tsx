@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
+import "@/components/writing/editor-styles.css"; // Import the editor styles
 import { cn } from "@/lib/utils";
 
 const fontSans = Inter({
