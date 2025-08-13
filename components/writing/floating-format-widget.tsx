@@ -46,36 +46,44 @@ const FloatingFormatWidget: React.FC<FloatingFormatWidgetProps> = ({
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
         
-        // Position the widget above the selection
-        setPosition({
-          top: window.scrollY + rect.top - 45, // 45px above selection
-          left: window.scrollX + rect.left + (rect.width / 2) - 100 // Centered
-        });
+        // Position the widget above the selection with better positioning
+        const top = window.scrollY + rect.top - 50; // 50px above selection
+        const left = Math.max(10, window.scrollX + rect.left + (rect.width / 2) - 100); // Centered but not off-screen
+        
+        setPosition({ top, left });
       }
     };
     
+    // Update position with a small delay to ensure selection is complete
+    const delayedUpdate = () => {
+      setTimeout(updatePosition, 50);
+    };
+    
     // Update position whenever selection changes
-    document.addEventListener('selectionchange', updatePosition);
+    document.addEventListener('selectionchange', delayedUpdate);
+    document.addEventListener('mouseup', delayedUpdate);
     updatePosition(); // Initial position
     
     return () => {
-      document.removeEventListener('selectionchange', updatePosition);
+      document.removeEventListener('selectionchange', delayedUpdate);
+      document.removeEventListener('mouseup', delayedUpdate);
     };
-  }, [selectedText]);
+  }, [selectedText, isVisible]);
   
   if (!isVisible || !selectedText) return null;
   
   return (
     <div 
-      className="fixed z-50 bg-white border shadow-lg rounded-lg py-1 px-2 flex items-center gap-1"
+      className="fixed z-[9999] bg-white border-2 border-gray-200 shadow-xl rounded-lg py-2 px-3 flex items-center gap-2 animate-in fade-in-0 zoom-in-95 duration-200"
       style={{ 
-        top: `${position.top}px`, 
+        top: `${Math.max(10, position.top)}px`, 
         left: `${position.left}px`,
-        transform: 'translateX(-50%)'
+        transform: 'translateX(-50%)',
+        minWidth: '200px'
       }}
     >
       <button
-        className="p-1 hover:bg-gray-100 rounded text-purple-600"
+        className="p-2 hover:bg-purple-50 rounded-md text-purple-600 transition-colors"
         onClick={onParaphrase}
         title="Paraphrase"
       >
@@ -83,7 +91,7 @@ const FloatingFormatWidget: React.FC<FloatingFormatWidgetProps> = ({
       </button>
       
       <DropdownMenu>
-        <DropdownMenuTrigger className="p-1 hover:bg-gray-100 rounded text-blue-600 flex items-center gap-0.5">
+        <DropdownMenuTrigger className="p-2 hover:bg-blue-50 rounded-md text-blue-600 flex items-center gap-1 transition-colors">
           <Book className="h-4 w-4" />
           <ChevronDown className="h-3 w-3" />
         </DropdownMenuTrigger>
@@ -104,7 +112,7 @@ const FloatingFormatWidget: React.FC<FloatingFormatWidgetProps> = ({
       </DropdownMenu>
       
       <button
-        className="p-1 hover:bg-gray-100 rounded text-orange-600"
+        className="p-2 hover:bg-orange-50 rounded-md text-orange-600 transition-colors"
         onClick={onShorten}
         title="Shorten Text"
       >
@@ -112,7 +120,7 @@ const FloatingFormatWidget: React.FC<FloatingFormatWidgetProps> = ({
       </button>
       
       <button
-        className="p-1 hover:bg-gray-100 rounded text-green-600"
+        className="p-2 hover:bg-green-50 rounded-md text-green-600 transition-colors"
         onClick={onExpand}
         title="Expand Text"
       >

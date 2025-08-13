@@ -55,31 +55,39 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   
   // Update editor content when initialContent changes
   useEffect(() => {
-    if (initialContent && !editorState.getCurrentContent().hasText()) {
+    if (initialContent) {
       const contentBlock = htmlToDraft(initialContent);
       if (contentBlock) {
         const contentState = ContentState.createFromBlockArray(
           contentBlock.contentBlocks
         );
-        setEditorState(EditorState.createWithContent(contentState));
+        const newEditorState = EditorState.createWithContent(contentState);
+        setEditorState(newEditorState);
       }
     }
   }, [initialContent]);
   
-  // Track selected text
+  // Track selected text - using a more stable approach
   useEffect(() => {
-    const handleSelectionChange = () => {
-      if (onSelectedTextChange) {
-        const selection = window.getSelection();
-        if (selection && selection.toString()) {
-          onSelectedTextChange(selection.toString());
+    // Wait until component is fully mounted
+    const timeoutId = setTimeout(() => {
+      const handleSelectionChange = () => {
+        if (onSelectedTextChange) {
+          const selection = window.getSelection();
+          if (selection && selection.toString()) {
+            onSelectedTextChange(selection.toString());
+          }
         }
-      }
-    };
+      };
+      
+      document.addEventListener('selectionchange', handleSelectionChange);
+      return () => {
+        document.removeEventListener('selectionchange', handleSelectionChange);
+      };
+    }, 500);
     
-    document.addEventListener('selectionchange', handleSelectionChange);
     return () => {
-      document.removeEventListener('selectionchange', handleSelectionChange);
+      clearTimeout(timeoutId);
     };
   }, [onSelectedTextChange]);
 
@@ -93,25 +101,22 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     }
   };
 
-  // Configure toolbar options for the editor
+  // Configure simplified toolbar options for the editor
   const toolbarOptions = {
-    options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'history'],
+    options: ['inline', 'blockType', 'fontSize', 'list', 'textAlign', 'link', 'history'],
     inline: {
       inDropdown: false,
-      options: ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript'],
+      options: ['bold', 'italic', 'underline', 'strikethrough'],
     },
     blockType: {
       inDropdown: true,
       options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote'],
+      className: 'blocktype-dropdown',
     },
     fontSize: {
       inDropdown: true,
       options: [8, 9, 10, 11, 12, 14, 16, 18, 24, 30, 36, 48],
-      className: 'font-size-dropdown',
-    },
-    fontFamily: {
-      inDropdown: true,
-      options: ['Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana'],
+      className: 'fontsize-dropdown',
     },
     list: {
       inDropdown: false,
@@ -120,15 +125,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     textAlign: {
       inDropdown: false,
       options: ['left', 'center', 'right', 'justify'],
-    },
-    colorPicker: {
-      colors: ['rgb(0,0,0)', 'rgb(97,189,109)', 'rgb(26,188,156)', 'rgb(84,172,210)', 
-               'rgb(44,130,201)', 'rgb(147,101,184)', 'rgb(71,85,119)', 'rgb(204,204,204)', 
-               'rgb(65,168,95)', 'rgb(0,168,133)', 'rgb(61,142,185)', 'rgb(41,105,176)', 
-               'rgb(85,57,130)', 'rgb(40,50,78)', 'rgb(247,218,100)', 'rgb(251,160,38)', 
-               'rgb(235,107,86)', 'rgb(226,80,65)', 'rgb(163,143,132)', 'rgb(239,239,239)', 
-               'rgb(255,255,255)', 'rgb(250,197,28)', 'rgb(243,121,52)', 'rgb(209,72,65)', 
-               'rgb(124,112,107)', 'rgb(209,213,216)'],
     },
     link: {
       inDropdown: false,

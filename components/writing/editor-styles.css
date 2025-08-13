@@ -60,20 +60,37 @@
 .rdw-dropdown-wrapper {
   height: auto !important;
   min-width: 40px !important;
-  z-index: 100;
+  z-index: 100 !important;
+  position: relative !important;
 }
 
 .rdw-dropdown-optionwrapper {
   max-height: 200px !important;
   overflow-y: auto !important;
+  z-index: 101 !important; 
+  position: absolute !important;
+  left: 0 !important;
+  top: 100% !important;
+  width: auto !important;
+  min-width: 100% !important;
 }
 
-.rdw-fontsize-dropdown {
-  min-width: 50px !important;
+.fontsize-dropdown {
+  min-width: 60px !important;
 }
 
-.rdw-fontfamily-dropdown {
+.blocktype-dropdown {
   min-width: 100px !important;
+}
+
+/* Fix font size display */
+.rdw-fontsize-dropdown {
+  min-width: 60px !important;
+}
+
+/* Fix for menu overflows */
+.rdw-editor-toolbar {
+  overflow: visible !important;
 }
 
 /* Make toolbar buttons more visible on hover */

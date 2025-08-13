@@ -135,32 +135,7 @@ const WritingToolbar: React.FC<WritingToolbarProps> = ({
         </Tooltip>
       </TooltipProvider>
       
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <ArrowUpDown className="h-4 w-4 mr-1" />
-                  Length
-                  <ChevronDown className="ml-1 h-3 w-3" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => onLengthAdjustClick('shorten')}>
-                  Make it Shorter
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onLengthAdjustClick('expand')}>
-                  Make it Longer
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Adjust text length</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      
 
       <div className="mx-1 h-6 border-r border-gray-300"></div>
 

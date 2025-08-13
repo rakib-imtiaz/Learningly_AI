@@ -12,11 +12,12 @@ import AISuggestionsPanel from "@/components/writing/ai-suggestions-panel"
 import DraftsManager from "@/components/writing/drafts-manager"
 import WordCounter from "@/components/writing/word-counter"
 import LengthAdjustDialog from "@/components/writing/length-adjust-dialog"
-import FloatingFormatWidget from "@/components/writing/floating-format-widget"
 import { convertToRaw, ContentState, EditorState, SelectionState } from "draft-js"
 import draftToHtml from "draftjs-to-html"
 import { getMockUserId } from "@/lib/mock-user"
 import { openInGoogleDocs, downloadFile } from "@/components/writing/google-docs-export"
+import { useToast } from "@/hooks/use-toast"
+import Toast from "@/components/ui/toast"
 
 interface GrammarIssue {
   id: string;
@@ -35,36 +36,39 @@ const WritingPage = () => {
   const [tone, setTone] = useState<string>("Formal")
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [collapseSuggestions, setCollapseSuggestions] = useState<boolean>(false)
-  const [saveStatus, setSaveStatus] = useState<string>("")
   const [currentDraftId, setCurrentDraftId] = useState<string | null>(null)
   const [lastProcessedFeature, setLastProcessedFeature] = useState<string>("")
   const [lengthAdjustDialogOpen, setLengthAdjustDialogOpen] = useState<boolean>(false)
   const [lengthAdjustAction, setLengthAdjustAction] = useState<'shorten' | 'expand'>('shorten')
   const [editorRef, setEditorRef] = useState<any>(null)
-  const [showFormatWidget, setShowFormatWidget] = useState<boolean>(false)
+  const [editorKey, setEditorKey] = useState<number>(0)
+  const [activeTab, setActiveTab] = useState<string>("paraphrase")
+  
+  const { toasts, showSuccess, showError, showInfo, showWarning, hideToast } = useToast()
   
   // Function to handle paraphrasing
   const handleParaphrase = async () => {
     if (!selectedText.trim()) {
-      // Instead of alert, set an informative message in the suggestions panel
       setSuggestedText("");
       setGrammarIssues([]);
       setLastProcessedFeature("Selection Required");
-      setSaveStatus("Please select text before clicking 'Paraphrase'");
-      setTimeout(() => setSaveStatus(""), 3000);
+      showWarning("Please select text before clicking 'Paraphrase'");
       return;
     }
 
+    // Auto-switch to paraphrase tab
+    setActiveTab("paraphrase");
     setIsProcessing(true);
     
     try {
+      console.log('Paraphrasing with tone:', tone); // Debug log
       // Call our API for paraphrasing
       const response = await fetch('/api/writing/paraphrase', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           text: selectedText, 
-          tone,
+          tone: tone.toLowerCase(), // Ensure consistent case
           userId: getMockUserId()
         })
       });
@@ -77,25 +81,26 @@ const WritingPage = () => {
       setSuggestedText(data.result);
       setLastProcessedFeature("Paraphrase");
       setIsProcessing(false);
+      showInfo(`Paraphrase generated successfully in ${tone} tone!`);
     } catch (error) {
       console.error("Error during paraphrasing:", error);
       setIsProcessing(false);
-      alert("An error occurred while paraphrasing.");
+      showError("An error occurred while paraphrasing. Please try again.");
     }
   };
 
   // Function to handle grammar checking
   const handleGrammarCheck = async () => {
     if (!selectedText.trim()) {
-      // Instead of alert, set an informative message in the suggestions panel
       setSuggestedText("");
       setGrammarIssues([]);
       setLastProcessedFeature("Selection Required");
-      setSaveStatus("Please select text before clicking 'Check Grammar'");
-      setTimeout(() => setSaveStatus(""), 3000);
+      showWarning("Please select text before clicking 'Check Grammar'");
       return;
     }
 
+    // Auto-switch to grammar tab
+    setActiveTab("grammar");
     setIsProcessing(true);
     
     try {
@@ -117,129 +122,171 @@ const WritingPage = () => {
       if (data.grammarIssues && data.grammarIssues.length > 0) {
         setGrammarIssues(data.grammarIssues);
         setLastProcessedFeature("Grammar Check");
+        showInfo(`Found ${data.grammarIssues.length} grammar issue${data.grammarIssues.length > 1 ? 's' : ''} to review`);
       } else {
         setGrammarIssues([]);
-        alert('No grammar issues found.');
         setLastProcessedFeature("Grammar Check (No issues)");
+        showSuccess('No grammar issues found. Your text looks great!');
       }
       setIsProcessing(false);
     } catch (error) {
       console.error("Error during grammar check:", error);
       setIsProcessing(false);
-      alert("An error occurred while checking grammar.");
+      showError("An error occurred while checking grammar. Please try again.");
     }
   };
 
-  // Helper function to find text in editor content and create a selection
-  const findTextInEditorContent = (text: string) => {
-    if (!editorRef) return null;
+  // Note: Removed unused findTextInEditorContent function
+
+  // Helper function to strip HTML tags for text matching
+  const stripHtmlTags = (html: string) => {
+    return html.replace(/<[^>]*>?/gm, '');
+  };
+
+  // Function to handle accepting all grammar suggestions
+  const handleAcceptAll = async () => {
+    if (grammarIssues.length === 0) return;
     
-    const currentState = editorRef.getEditorState();
-    const contentState = currentState.getCurrentContent();
-    const blocks = contentState.getBlockMap();
+    let updatedContent = editorContent;
+    let appliedCount = 0;
     
-    // Search for text in blocks
-    let foundBlock = null;
-    let startOffset = -1;
-    
-    blocks.forEach((block) => {
-      if (foundBlock) return; // Already found
-      
-      const blockText = block.getText();
-      const index = blockText.indexOf(text);
-      
-      if (index >= 0) {
-        foundBlock = block;
-        startOffset = index;
+    // Apply each grammar fix sequentially
+    for (const issue of grammarIssues) {
+      try {
+        if (updatedContent.includes(issue.original)) {
+          updatedContent = updatedContent.replace(
+            new RegExp(issue.original.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), 
+            issue.suggestion
+          );
+          appliedCount++;
+        } else {
+          // Try flexible pattern matching
+          const plainTextContent = stripHtmlTags(updatedContent);
+          if (plainTextContent.includes(issue.original)) {
+            const flexiblePattern = issue.original
+              .split(' ')
+              .map(word => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+              .join('\\s+(?:<[^>]*>\\s*)*');
+            
+            updatedContent = updatedContent.replace(
+              new RegExp(flexiblePattern),
+              issue.suggestion
+            );
+            appliedCount++;
+          }
+        }
+      } catch (error) {
+        console.error(`Error applying fix for "${issue.original}":`, error);
       }
-    });
-    
-    // If text found, create a selection
-    if (foundBlock && startOffset >= 0) {
-      const blockKey = foundBlock.getKey();
-      const selectionState = SelectionState.createEmpty(blockKey);
-      
-      return selectionState.merge({
-        anchorKey: blockKey,
-        anchorOffset: startOffset,
-        focusKey: blockKey,
-        focusOffset: startOffset + text.length,
-      });
     }
     
-    return null;
+    if (appliedCount > 0) {
+      setEditorContent(updatedContent);
+      setEditorKey(prev => prev + 1);
+      setGrammarIssues([]);
+      showSuccess(`All ${appliedCount} grammar issue${appliedCount > 1 ? 's' : ''} fixed successfully!`);
+    } else {
+      showError("Could not apply grammar fixes. Please try individual fixes.");
+    }
   };
 
-  // Function to handle accepting suggestions
+  // Function to handle accepting suggestions - improved approach
   const handleAcceptSuggestion = (newText: string) => {
-    // For grammar suggestions, we use the suggestion directly
+    // Check if this is a grammar suggestion or paraphrase
     const issue = grammarIssues.find(issue => issue.suggestion === newText);
+    const isParaphrase = !issue && newText === suggestedText;
     const textToReplace = issue?.original || selectedText;
     
-    if (editorRef && textToReplace) {
+    if (editorContent && textToReplace && textToReplace.trim()) {
       try {
-        // Get current state and content
-        const currentState = editorRef.getEditorState();
-        const contentState = currentState.getCurrentContent();
-        let selection = currentState.getSelection();
+        // Try multiple replacement strategies for better accuracy
+        let updatedContent = editorContent;
         
-        // For grammar issues, find the text to replace
-        if (issue) {
-          const foundSelection = findTextInEditorContent(textToReplace);
-          if (foundSelection) {
-            selection = foundSelection;
+        // Strategy 1: Direct replacement in HTML
+        if (editorContent.includes(textToReplace)) {
+          updatedContent = editorContent.replace(
+            new RegExp(textToReplace.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), 
+            newText
+          );
+        } else {
+          // Strategy 2: Check if we need to find the text in plain text and replace in HTML
+          const plainTextContent = stripHtmlTags(editorContent);
+          if (plainTextContent.includes(textToReplace)) {
+            // Create a more flexible regex that accounts for HTML tags
+            const flexiblePattern = textToReplace
+              .split(' ')
+              .map(word => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+              .join('\\s+(?:<[^>]*>\\s*)*');
+            
+            updatedContent = editorContent.replace(
+              new RegExp(flexiblePattern),
+              newText
+            );
           }
         }
         
-        // Check if we have a valid selection
-        if (selection && !selection.isCollapsed()) {
-          // Get the selected text range
-          const startKey = selection.getStartKey();
-          const endKey = selection.getEndKey();
-          const startOffset = selection.getStartOffset();
-          const endOffset = selection.getEndOffset();
+        // Only proceed if content actually changed
+        if (updatedContent !== editorContent) {
+          // Force editor to update by setting content and incrementing key
+          setEditorContent(updatedContent);
+          setEditorKey(prev => prev + 1);
           
-          // Create new content state with replaced text
-          const contentWithReplacedText = ContentState.createFromText(newText);
+          // Also update raw content if available
+          if (editorRawContent) {
+            const updatedRawContent = { ...editorRawContent };
+            setEditorRawContent(updatedRawContent);
+          }
           
-          // Update editor state with new content
-          const newContentState = contentState.replaceText(
-            selection, 
-            newText
-          );
-          
-          const newEditorState = EditorState.push(
-            currentState,
-            newContentState,
-            'insert-characters'
-          );
-          
-          // Update the editor
-          editorRef.setEditorState(newEditorState);
-          
-          // Clear suggestions
-          setSuggestedText("");
-          
-          // Success message
-          setSaveStatus("Text updated successfully!");
-          setTimeout(() => setSaveStatus(""), 2000);
+          if (isParaphrase) {
+            // Clear paraphrase suggestions
+            setSuggestedText("");
+            setSelectedText("");
+            showSuccess("Text paraphrased successfully!");
+          } else if (issue) {
+            // Only remove the specific grammar issue that was accepted
+            const updatedGrammarIssues = grammarIssues.filter(gi => gi.id !== issue.id);
+            setGrammarIssues(updatedGrammarIssues);
+            setSelectedText("");
+            
+            // Success message for grammar
+            const remainingCount = grammarIssues.length - 1;
+            if (remainingCount > 0) {
+              showSuccess(`Grammar issue fixed! ${remainingCount} remaining.`);
+            } else {
+              showSuccess("Grammar issue fixed! All issues resolved.");
+            }
+          }
         } else {
-          // If no text is selected
-          alert("No text is currently selected. Please select text first.");
+          showWarning("Could not find the exact text to replace. Please try selecting the text again.");
         }
+        
       } catch (error) {
         console.error("Error replacing text:", error);
-        alert("An error occurred while updating the text. Please try again.");
+        showError("An error occurred while updating the text. Please try again.");
       }
     } else {
-      // If no editor reference or selected text
-      alert("Unable to determine where to replace text. Please select text again.");
+      // If no content or text to replace
+      showWarning("Unable to determine where to replace text. Please select text again.");
     }
   };
 
   // Function to handle rejecting suggestions
-  const handleRejectSuggestion = () => {
-    setSuggestedText("");
+  const handleRejectSuggestion = (issueId?: string) => {
+    if (issueId) {
+      // Remove only the specific grammar issue
+      const updatedGrammarIssues = grammarIssues.filter(gi => gi.id !== issueId);
+      setGrammarIssues(updatedGrammarIssues);
+      if (updatedGrammarIssues.length > 0) {
+        showInfo(`Grammar issue ignored. ${updatedGrammarIssues.length} remaining.`);
+      } else {
+        showSuccess("Grammar issue ignored. All issues resolved.");
+      }
+    } else {
+      // Clear all suggestions (for paraphrase rejection)
+      setSuggestedText("");
+      setGrammarIssues([]);
+      setSelectedText("");
+    }
   };
   
   // Function to clear all suggestions
@@ -252,11 +299,11 @@ const WritingPage = () => {
   // Function to handle saving drafts
   const handleSaveDraft = async () => {
     if (!editorContent.trim()) {
-      alert("Nothing to save. Please add some content first.");
+      showWarning("Nothing to save. Please add some content first.");
       return;
     }
 
-    setSaveStatus("Saving...");
+    showInfo("Saving draft...");
     
     try {
       const response = await fetch('/api/writing/drafts/save', {
@@ -282,23 +329,81 @@ const WritingPage = () => {
         setCurrentDraftId(data.id);
       }
       
-      setSaveStatus(`Draft ${data.isNewDraft ? 'created' : 'updated'} successfully!`);
-      setTimeout(() => setSaveStatus(""), 3000);
+      showSuccess(`Draft ${data.isNewDraft ? 'created' : 'updated'} successfully!`);
     } catch (error) {
       console.error("Error saving draft:", error);
-      setSaveStatus("Error saving draft");
-      setTimeout(() => setSaveStatus(""), 3000);
+      showError("Error saving draft. Please try again.");
     }
   };
 
   // Function to handle exporting
   const handleExport = async (format: string) => {
     if (!editorContent.trim()) {
-      alert("Nothing to export. Please add some content first.");
+      showWarning("Nothing to export. Please add some content first.");
       return;
     }
     
-    setSaveStatus(`Preparing ${format.toUpperCase()} export...`);
+    // Handle Google Docs export separately (client-side)
+    if (format === "gdocs") {
+      showInfo("Opening in Google Docs...");
+      try {
+        openInGoogleDocs(editorContent);
+        showSuccess("Opened in Google Docs successfully!");
+        
+        // Log the export
+        await fetch('/api/writing/drafts/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            downloadFormat: "gdocs",
+            userId: getMockUserId(),
+            summaryId: currentDraftId || null
+          })
+        });
+      } catch (error) {
+        console.error("Error opening in Google Docs:", error);
+        showError("Failed to open in Google Docs. Please try again.");
+      }
+      return;
+    }
+    
+    // For simple text download, handle it client-side
+    if (format === "txt") {
+      showInfo(`Preparing TXT export...`);
+      try {
+        // Strip HTML tags for plain text
+        const plainText = editorContent.replace(/<[^>]*>?/gm, '');
+        
+        // Generate filename with timestamp
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const filename = `document-${timestamp}.txt`;
+        
+        // Download the file
+        downloadFile(plainText, filename, "text/plain");
+        
+        showSuccess(`Text file downloaded successfully!`);
+        
+        // Log the download
+        await fetch('/api/writing/drafts/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            downloadFormat: format,
+            userId: getMockUserId(),
+            summaryId: currentDraftId || null
+          })
+        });
+        
+        return;
+      } catch (error) {
+        console.error("Error downloading text file:", error);
+        showError("Text export failed. Please try again.");
+        return;
+      }
+    }
+    
+    // For PDF and DOCX, use the server API
+    showInfo(`Preparing ${format.toUpperCase()} export...`);
     
     try {
       const response = await fetch('/api/writing/export', {
@@ -318,8 +423,7 @@ const WritingPage = () => {
       
       const data = await response.json();
       
-      setSaveStatus(`${format.toUpperCase()} export ready!`);
-      setTimeout(() => setSaveStatus(""), 3000);
+      showSuccess(`${format.toUpperCase()} export ready! Download started.`);
       
       // Create an invisible link to trigger download
       const link = document.createElement('a');
@@ -335,14 +439,13 @@ const WritingPage = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           downloadFormat: format,
-          userId: "mock-user-id",
+          userId: getMockUserId(),
           summaryId: currentDraftId || null // In production, this would track which summary was downloaded
         })
       });
     } catch (error) {
       console.error("Error exporting document:", error);
-      setSaveStatus("Export failed");
-      setTimeout(() => setSaveStatus(""), 3000);
+      showError(`${format.toUpperCase()} export failed. Please try again.`);
     }
   };
 
@@ -354,12 +457,10 @@ const WritingPage = () => {
     // Function to open length adjust dialog
   const openLengthAdjustDialog = (action: 'shorten' | 'expand') => {
     if (!selectedText.trim()) {
-      // Instead of alert, set an informative message in the suggestions panel
       setSuggestedText("");
       setGrammarIssues([]);
       setLastProcessedFeature("Selection Required");
-      setSaveStatus(`Please select text before using the ${action === 'shorten' ? 'shorten' : 'expand'} feature`);
-      setTimeout(() => setSaveStatus(""), 3000);
+      showWarning(`Please select text before using the ${action === 'shorten' ? 'shorten' : 'expand'} feature`);
       return;
     }
     
@@ -370,11 +471,12 @@ const WritingPage = () => {
   // Function to handle length adjustments with percentage parameter
   const handleLengthAdjust = async (action: 'shorten' | 'expand', percentage: number = 50) => {
     if (!selectedText.trim()) {
-      alert(`Please select text to ${action}`);
+      showWarning(`Please select text to ${action}`);
       return;
     }
 
     setIsProcessing(true);
+    setActiveTab("paraphrase"); // Switch to paraphrase tab for length adjust results
     
     try {
       const response = await fetch('/api/writing/adjust-length', {
@@ -396,10 +498,11 @@ const WritingPage = () => {
       setSuggestedText(data.result);
       setLastProcessedFeature(`${action === 'shorten' ? 'Shortened' : 'Expanded'} Text (${percentage}%)`);
       setIsProcessing(false);
+      showInfo(`Text ${action}ed successfully by ${percentage}%!`);
     } catch (error) {
       console.error(`Error ${action}ing text:`, error);
       setIsProcessing(false);
-      alert(`An error occurred while ${action}ing the text.`);
+      showError(`An error occurred while ${action}ing the text. Please try again.`);
     }
   };
 
@@ -415,15 +518,15 @@ const WritingPage = () => {
     if (selection && selection.toString()) {
       const text = selection.toString();
       setSelectedText(text);
-      setShowFormatWidget(text.trim().length > 0);
+      // Remove floating widget - setShowFormatWidget(false);
     } else {
-      setShowFormatWidget(false);
+      setSelectedText("");
     }
   };
 
   // Function to handle loading a draft
   const handleLoadDraft = async (draftId: string) => {
-    setSaveStatus("Loading draft...");
+    showInfo("Loading draft...");
     setIsProcessing(true);
     
     try {
@@ -440,13 +543,12 @@ const WritingPage = () => {
       setEditorRawContent(data.rawContent || null);
       setTone(data.tone || "Formal");
       setCurrentDraftId(data.id);
+      setEditorKey(prev => prev + 1); // Force editor re-render
       
-      setSaveStatus("Draft loaded successfully!");
-      setTimeout(() => setSaveStatus(""), 3000);
+      showSuccess("Draft loaded successfully!");
     } catch (error) {
       console.error("Error loading draft:", error);
-      setSaveStatus("Error loading draft");
-      setTimeout(() => setSaveStatus(""), 3000);
+      showError("Error loading draft. Please try again.");
     } finally {
       setIsProcessing(false);
     }
@@ -485,11 +587,7 @@ const WritingPage = () => {
             Enhanced paraphrasing, grammar checking, and text improvement
           </span>
         </div>
-        {saveStatus && (
-          <div className="bg-green-50 text-green-700 px-4 py-2 rounded-md mb-4 animate-fade-in">
-            {saveStatus}
-          </div>
-        )}
+
       </div>
 
       <div className="flex flex-1 overflow-hidden">
@@ -513,6 +611,8 @@ const WritingPage = () => {
             <CardContent className="p-0 flex flex-col">
               <div onMouseUp={handleTextSelection} className="h-full flex-grow">
                 <RichTextEditor
+                  key={`editor-${editorKey}`}
+                  initialContent={editorContent}
                   onChange={handleEditorChange}
                   height="calc(100vh - 240px)"
                   onSelectedTextChange={setSelectedText}
@@ -544,10 +644,13 @@ const WritingPage = () => {
               selectedText={selectedText}
               onAccept={handleAcceptSuggestion}
               onReject={handleRejectSuggestion}
+              onAcceptAll={handleAcceptAll}
               onClear={handleClearSuggestions}
               isProcessing={isProcessing}
               suggestedText={suggestedText}
               grammarIssues={grammarIssues}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
             />
               </div>
             )}
@@ -561,16 +664,16 @@ const WritingPage = () => {
         currentText={selectedText}
       />
       
-      {/* Floating format widget */}
-      <FloatingFormatWidget
-        onParaphrase={handleParaphrase}
-        onToneChange={handleToneChange}
-        onShorten={() => openLengthAdjustDialog('shorten')}
-        onExpand={() => openLengthAdjustDialog('expand')}
-        selectedText={selectedText}
-        selectedTone={tone}
-        isVisible={showFormatWidget}
-      />
+      {/* Toast notifications */}
+      {toasts.map((toast) => (
+        <Toast
+          key={toast.id}
+          message={toast.message}
+          type={toast.type}
+          isVisible={true}
+          onClose={() => hideToast(toast.id)}
+        />
+      ))}
     </div>
   )
 }

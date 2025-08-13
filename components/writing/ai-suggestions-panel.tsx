@@ -11,11 +11,14 @@ import { SlideIn } from "@/components/react-bits/slide-in";
 interface AISuggestionsPanelProps {
   selectedText: string;
   onAccept: (newText: string) => void;
-  onReject: () => void;
+  onReject: (issueId?: string) => void;
+  onAcceptAll: () => void;
   onClear: () => void;
   isProcessing: boolean;
   suggestedText: string;
   grammarIssues: GrammarIssue[];
+  activeTab: string;
+  onTabChange: (tab: string) => void;
 }
 
 interface GrammarIssue {
@@ -30,12 +33,14 @@ const AISuggestionsPanel: React.FC<AISuggestionsPanelProps> = ({
   selectedText,
   onAccept,
   onReject,
+  onAcceptAll,
   onClear,
   isProcessing,
   suggestedText,
-  grammarIssues = []
+  grammarIssues = [],
+  activeTab,
+  onTabChange
 }) => {
-  const [activeTab, setActiveTab] = useState("paraphrase");
   
   return (
     <Card className="shadow-lg rounded-xl h-full">
@@ -79,7 +84,7 @@ const AISuggestionsPanel: React.FC<AISuggestionsPanelProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <Tabs value={activeTab} onValueChange={onTabChange}>
           <TabsList className="grid grid-cols-3 mb-4">
             <TabsTrigger value="paraphrase">Paraphrase</TabsTrigger>
             <TabsTrigger value="grammar">Grammar</TabsTrigger>
@@ -114,6 +119,19 @@ const AISuggestionsPanel: React.FC<AISuggestionsPanelProps> = ({
           <TabsContent value="grammar">
             {grammarIssues.length > 0 ? (
               <div className="space-y-3 h-[calc(100vh-320px)] overflow-y-auto pr-2">
+                <div className="flex justify-between items-center mb-3 p-3 bg-gray-50 rounded-lg">
+                  <span className="text-sm text-gray-600">
+                    {grammarIssues.length} issue{grammarIssues.length > 1 ? 's' : ''} found
+                  </span>
+                  <Button
+                    size="sm"
+                    onClick={onAcceptAll}
+                    className="bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    <CheckCircle className="h-4 w-4 mr-1" />
+                    Accept All
+                  </Button>
+                </div>
                 {grammarIssues.map((issue) => (
                   <Card key={issue.id} className="p-3 border-l-4 border-l-amber-400">
                     <div className="grid grid-cols-[auto_1fr] gap-2">
@@ -133,7 +151,7 @@ const AISuggestionsPanel: React.FC<AISuggestionsPanelProps> = ({
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={() => onReject()}
+                          onClick={() => onReject(issue.id)}
                           className="text-red-500 hover:bg-red-50"
                         >
                           Ignore
