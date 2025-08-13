@@ -60,7 +60,7 @@ export const exportToDOCX = async (
     subject: metadata.subject || '',
     creator: metadata.creator || 'Learningly AI',
     description: metadata.subject || '',
-    keywords: metadata.keywords || [],
+    keywords: metadata.keywords?.join(', ') || '',
     sections: [{
       properties: {},
       children: [

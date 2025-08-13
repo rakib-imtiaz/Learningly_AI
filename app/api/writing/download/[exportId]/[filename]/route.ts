@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { exportId: string; filename: string } }
+  { params }: { params: Promise<{ exportId: string; filename: string }> }
 ) {
   try {
-    const { exportId, filename } = params;
+    const { exportId, filename } = await params;
     
     // In production, this would:
     // 1. Check if the exportId exists and belongs to the user

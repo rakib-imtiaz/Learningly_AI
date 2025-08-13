@@ -69,25 +69,29 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   
   // Track selected text - using a more stable approach
   useEffect(() => {
-    // Wait until component is fully mounted
-    const timeoutId = setTimeout(() => {
-      const handleSelectionChange = () => {
-        if (onSelectedTextChange) {
-          const selection = window.getSelection();
-          if (selection && selection.toString()) {
-            onSelectedTextChange(selection.toString());
-          }
+    if (!onSelectedTextChange) return;
+    
+    const handleSelectionChange = () => {
+      // Add a small delay to ensure selection is stable
+      setTimeout(() => {
+        if (typeof window === 'undefined') return; // SSR guard
+        
+        const selection = window.getSelection();
+        if (selection && selection.toString().trim()) {
+          onSelectedTextChange(selection.toString().trim());
         }
-      };
-      
+      }, 50);
+    };
+    
+    // Use selectionchange event which is more reliable
+    if (typeof document !== 'undefined') {
       document.addEventListener('selectionchange', handleSelectionChange);
-      return () => {
-        document.removeEventListener('selectionchange', handleSelectionChange);
-      };
-    }, 500);
+    }
     
     return () => {
-      clearTimeout(timeoutId);
+      if (typeof document !== 'undefined') {
+        document.removeEventListener('selectionchange', handleSelectionChange);
+      }
     };
   }, [onSelectedTextChange]);
 

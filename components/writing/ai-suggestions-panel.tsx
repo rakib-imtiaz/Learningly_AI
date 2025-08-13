@@ -65,7 +65,7 @@ const AISuggestionsPanel: React.FC<AISuggestionsPanelProps> = ({
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={onReject}
+                  onClick={() => onReject()}
                   className="text-red-500 hover:text-red-600 hover:bg-red-50"
                 >
                   <X className="h-4 w-4 mr-1" /> Reject
