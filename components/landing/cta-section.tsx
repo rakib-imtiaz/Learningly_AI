@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
@@ -16,7 +17,17 @@ export const CTASection: React.FC = () => {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
+            className="relative"
           >
+            <div className="absolute -top-16 -right-16 -z-10 opacity-20">
+              <Image 
+                src="/images/landing/cta/cta-learning-revolution.png"
+                alt="Learning Revolution"
+                width={300}
+                height={300}
+                className="w-64 h-64 object-contain"
+              />
+            </div>
             <span className="inline-block px-4 py-2 bg-gradient-to-r from-electric-blue to-purple text-white text-sm font-bold rounded-full mb-6">
               🚀 Ready to Transform Your Study Game?
             </span>

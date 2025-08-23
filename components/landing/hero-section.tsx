@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { Rocket, Brain, Zap } from 'lucide-react';
@@ -14,6 +15,15 @@ export const HeroSection: React.FC = () => {
       <section className="relative min-h-screen flex items-center justify-center text-center bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background"></div>
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <Image 
+            src="/images/landing/hero/hero-ai-learning-platform.png" 
+            alt="AI Learning Platform"
+            fill
+            priority
+            className="object-cover opacity-30 blur-[2px]"
+          />
+        </div>
         <div className="container mx-auto px-6 relative z-10">
           <SlideIn direction="down" delay={0.1}>
             <div className="mb-6">
@@ -82,6 +92,8 @@ export const HeroSection: React.FC = () => {
               </div>
             </div>
           </FadeContent>
+          
+
         </div>
       </section>
     </>

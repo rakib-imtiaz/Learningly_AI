@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { SlideIn } from '@/components/react-bits';
 import { cn } from '@/lib/utils';
+import ShinyText from '@/components/react-bits/shiny-text';
 
 const demos = {
   quiz: {
@@ -96,13 +97,13 @@ const QuizComponent = ({
             className={cn(
               "flex w-full items-center gap-3 rounded-lg border-2 p-4 text-left transition-all",
               selected === null && "hover:border-primary/50 hover:bg-black/5",
-              selected !== null && index === data[current].correct && "border-black/50 bg-black/5 text-black",
-              selected !== null && selected === index && index !== data[current].correct && "border-black/50 bg-black/5 text-black",
+              selected !== null && index === data[current].correct && "border-green-500 bg-green-50 text-green-700",
+              selected !== null && selected === index && index !== data[current].correct && "border-red-500 bg-red-50 text-red-700",
               selected !== null && selected !== index && "opacity-50"
             )}
             whileTap={{ scale: selected === null ? 0.98 : 1 }}
           >
-            <div className={cn("flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2", selected !== null && index === data[current].correct && "border-black/50 bg-black text-white", selected !== null && selected === index && index !== data[current].correct && "border-black/50 bg-black text-white")}>
+            <div className={cn("flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2", selected !== null && index === data[current].correct && "border-green-500 bg-green-500 text-white", selected !== null && selected === index && index !== data[current].correct && "border-red-500 bg-red-500 text-white")}>
               {selected !== null && index === data[current].correct && <Check size={14} />}
               {selected !== null && selected === index && index !== data[current].correct && <X size={14} />}
             </div>
@@ -208,9 +209,12 @@ export const StudyFlowSection: React.FC = () => {
           <Badge variant="outline" className="mb-4 border-primary/30 bg-primary/10 py-2 px-4 text-sm font-medium text-primary">
             Interactive Learning
           </Badge>
-          <h2 className="font-heading text-4xl font-bold tracking-tighter text-foreground md:text-5xl">
-            Experience Learning That Adapts to You
-          </h2>
+          <ShinyText 
+            text="Experience Learning That Adapts to You" 
+            disabled={false} 
+            speed={3} 
+            className="font-heading text-4xl font-bold tracking-tighter md:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-electric-blue via-purple to-lime-green"
+          />
           <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
             Our AI-powered tools are not just smart, they're designed to make your study sessions more effective and engaging.
           </p>

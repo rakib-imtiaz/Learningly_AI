@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -26,6 +27,7 @@ const plans = [
       "Feature usage caps",
     ],
     isPopular: false,
+    image: "/images/landing/pricing/pricing-free-plan.png"
   },
   {
     name: "Study Pro",
@@ -43,6 +45,7 @@ const plans = [
     ],
     limitations: [],
     isPopular: true,
+    image: "/images/landing/pricing/pricing-premium-plan.png"
   }
 ];
 
@@ -89,7 +92,7 @@ export const PricingSection: React.FC = () => {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
             <motion.div
               key={plan.name}
@@ -97,36 +100,46 @@ export const PricingSection: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className={cn(
-                "relative flex flex-col rounded-2xl p-8 border transition-all duration-300 h-full",
+                "relative flex flex-col rounded-2xl p-10 border transition-all duration-300 h-full",
                 plan.isPopular 
                   ? "border-electric-blue/50 bg-gradient-to-br from-gray-900/60 to-gray-800/40 shadow-2xl shadow-electric-blue/20" 
                   : "border-gray-700 bg-gradient-to-br from-gray-900/40 to-gray-800/30 hover:border-gray-600"
               )}
             >
               {plan.isPopular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-electric-blue to-purple text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-gradient-to-r from-electric-blue to-purple text-white px-8 py-3 rounded-full text-sm font-bold shadow-xl z-10">
                   <Star className="inline-block mr-2 h-4 w-4" />
                   Most Popular Choice! 🚀
                 </div>
               )}
 
-              <div className="mb-6">
-                <h3 className="text-3xl font-bold text-white mb-2">{plan.name}</h3>
-                <p className="text-gray-400">{plan.description}</p>
+              <div className="mb-8">
+                <div className="relative h-48 w-full mb-8 rounded-xl overflow-hidden bg-gradient-to-br from-electric-blue/10 to-purple/10">
+                  {plan.image && (
+                    <Image
+                      src={plan.image}
+                      alt={plan.name}
+                      fill
+                      className="object-contain p-6 hover:scale-105 transition-transform duration-500"
+                    />
+                  )}
+                </div>
+                <h3 className="text-3xl font-bold text-white mb-3">{plan.name}</h3>
+                <p className="text-gray-400 text-lg">{plan.description}</p>
               </div>
 
-              <div className="mb-8">
+              <div className="mb-10">
                 <div className="flex items-baseline">
-                  <span className="text-5xl font-extrabold text-white">
+                  <span className="text-6xl font-extrabold text-white">
                     ${isYearly ? plan.yearlyPrice : plan.monthlyPrice}
                   </span>
-                  <span className="ml-2 text-gray-400 text-lg">
+                  <span className="ml-3 text-gray-400 text-xl">
                     /{isYearly ? 'year' : 'month'}
                   </span>
                 </div>
                 {plan.monthlyPrice > 0 && (
-                  <p className="text-sm text-gray-500 mt-2 flex items-center">
-                    <Coffee className="h-4 w-4 mr-1" />
+                  <p className="text-base text-gray-500 mt-3 flex items-center">
+                    <Coffee className="h-5 w-5 mr-2" />
                     {isYearly ? 'That\'s only $8.33/month!' : 'Less than a coffee per day!'}
                   </p>
                 )}

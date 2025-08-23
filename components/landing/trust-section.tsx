@@ -60,15 +60,15 @@ const universityLogos = [
 
 const LogoItem = ({ logo }: { logo: typeof universityLogos[0] }) => (
   <motion.div
-    whileHover={{ scale: 1.1, filter: 'grayscale(0%)' }}
-    className="flex items-center justify-center px-6 h-20 grayscale hover:grayscale-0 transition-all duration-300"
+    whileHover={{ scale: 1.1 }}
+    className="flex items-center justify-center px-8 h-24 transition-all duration-300"
   >
-    <div className="w-32 h-16 bg-white rounded-lg flex items-center justify-center border border-gray-200 hover:border-primary/50 transition-colors p-3">
+    <div className="w-48 h-20 bg-white rounded-lg flex items-center justify-center border border-gray-200 hover:border-primary/50 transition-colors p-4">
       <Image
         src={logo.src}
         alt={logo.name}
-        width={120}
-        height={60}
+        width={180}
+        height={80}
         className="object-contain w-full h-full"
         onError={(e) => {
           // Fallback to text if image fails to load
