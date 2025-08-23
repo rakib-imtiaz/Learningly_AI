@@ -11,3 +11,4 @@ export { SlideIn } from './slide-in';
 export { Confetti } from './confetti';
 export { Typewriter } from './typewriter';
 export { default as LightRays } from './light-rays';
+export { default as ShinyText } from './shiny-text';

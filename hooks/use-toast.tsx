@@ -1,46 +1,64 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import * as React from "react";
+import { Toaster as Sonner } from "sonner";
 
-interface ToastMessage {
-  id: string;
-  message: string;
-  type: "success" | "error" | "info" | "warning";
+const ToastContext = React.createContext({ toast: (options: any) => {} });
+
+export function ToastProvider({
+  children,
+  ...props
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <ToastContext.Provider value={{ toast }}>
+      {children}
+      <Sonner
+        className="toaster group"
+        toastOptions={{
+          classNames: {
+            toast:
+              "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
+            description: "group-[.toast]:text-muted-foreground",
+            actionButton:
+              "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
+            cancelButton:
+              "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
+          },
+        }}
+        {...props}
+      />
+    </ToastContext.Provider>
+  );
 }
 
-export function useToast() {
-  const [toasts, setToasts] = useState<ToastMessage[]>([]);
+export const useToast = () => {
+  const context = React.useContext(ToastContext);
+  if (context === undefined) {
+    throw new Error("useToast must be used within a ToastProvider");
+  }
+  return context;
+};
 
-  const showToast = useCallback((message: string, type: "success" | "error" | "info" | "warning" = "info") => {
-    const id = Math.random().toString(36).substr(2, 9);
-    const newToast = { id, message, type };
-    
-    setToasts(prev => [...prev, newToast]);
-    
-    // Auto-remove toast after 3 seconds
-    setTimeout(() => {
-      setToasts(prev => prev.filter(toast => toast.id !== id));
-    }, 3000);
-    
-    return id;
-  }, []);
-
-  const hideToast = useCallback((id: string) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
-  }, []);
-
-  const showSuccess = useCallback((message: string) => showToast(message, "success"), [showToast]);
-  const showError = useCallback((message: string) => showToast(message, "error"), [showToast]);
-  const showInfo = useCallback((message: string) => showToast(message, "info"), [showToast]);
-  const showWarning = useCallback((message: string) => showToast(message, "warning"), [showToast]);
-
-  return {
-    toasts,
-    showToast,
-    hideToast,
-    showSuccess,
-    showError,
-    showInfo,
-    showWarning,
+export const toast = ({
+  title,
+  description,
+  variant = "default",
+  ...props
+}: {
+  title?: string;
+  description?: string;
+  variant?: "default" | "destructive" | "success";
+} & React.ComponentPropsWithoutRef<typeof Sonner>) => {
+  const sonnerProps = {
+    ...props,
   };
-}
+  
+  return import("sonner").then(({ toast }) => {
+    toast(title, {
+      description,
+      ...sonnerProps,
+    });
+  });
+};

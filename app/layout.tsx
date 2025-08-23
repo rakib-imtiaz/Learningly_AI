@@ -3,16 +3,17 @@ import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import "@/components/writing/editor-styles.css"; // Import the editor styles
 import { cn } from "@/lib/utils";
+import { ToastProvider } from "@/hooks/use-toast";
 
-const fontSans = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-
-const fontHeading = Poppins({
+const fontSans = Poppins({
   subsets: ["latin"],
   display: "swap",
   weight: ["400", "500", "600", "700"],
+  variable: "--font-sans",
+});
+
+const fontHeading = Inter({
+  subsets: ["latin"],
   variable: "--font-heading",
 });
 
@@ -74,7 +75,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body
@@ -84,9 +85,11 @@ export default function RootLayout({
         )}
         suppressHydrationWarning
       >
-        <div className="relative flex min-h-screen flex-col">
-          <div className="flex-1">{children}</div>
-        </div>
+        <ToastProvider>
+          <div className="relative flex min-h-screen flex-col">
+            <div className="flex-1">{children}</div>
+          </div>
+        </ToastProvider>
       </body>
     </html>
   );

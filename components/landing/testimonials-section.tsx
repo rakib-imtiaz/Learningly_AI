@@ -1,70 +1,72 @@
 'use client';
 
 import React from 'react';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Star,
-  Quote
-} from 'lucide-react';
-import { SlideIn } from '@/components/react-bits';
+import { motion } from 'framer-motion';
 import Marquee from '@/components/ui/marquee';
-import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import GradientText from '@/components/ui/gradient-text';
+import { Star } from 'lucide-react';
+import { ShinyText } from '@/components/react-bits';
 
 const testimonials = [
   {
     name: "Sarah Chen",
-    role: "Medical Student",
+    degree: "MD Candidate",
+    university: "Harvard Medical School",
     avatar: "/avatars/sarah.jpg",
-    text: "Learningly AI transformed how I study for my medical boards. The AI-generated flashcards and adaptive quizzes helped me improve my retention by 40%.",
+    text: "Learningly AI saved my life during med school! The AI flashcards helped me memorize anatomy like magic. My grades went from B's to A's! 🩺✨",
   },
   {
     name: "Marcus Johnson",
-    role: "CS Professor",
+    degree: "PhD, Computer Science",
+    university: "Stanford University",
     avatar: "/avatars/marcus.jpg", 
-    text: "I use Learningly AI to create study materials for my students. The quality of AI-generated summaries and quizzes is exceptional.",
+    text: "As a CS professor, I'm blown away by how well this AI understands complex concepts. My students love the interactive quizzes! 💻🚀",
   },
   {
     name: "Emma Rodriguez",
-    role: "High School Student",
+    degree: "High School Student",
+    university: "Phillips Exeter Academy",
     avatar: "/avatars/emma.jpg",
-    text: "Finally, a study tool that actually makes learning fun! The interactive quizzes adapt to my level, and the AI chat tutor explains concepts in ways I can understand.",
+    text: "Finally, a study tool that doesn't make me want to fall asleep! The AI tutor explains things in ways I actually understand. Game changer! 🎓💡",
   },
   {
     name: "Dr. James Park",
-    role: "Corporate Trainer",
+    degree: "Corporate Trainer",
+    university: "MIT Sloan",
     avatar: "/avatars/james.jpg",
-    text: "We implemented Learningly AI for our employee training programs. The platform's ability to convert our extensive documentation into engaging learning materials has revolutionized our onboarding process.",
+    text: "We use Learningly AI for employee training, and it's revolutionized our onboarding. Everyone learns faster and retains more! 🏢📈",
   },
   {
     name: "Lisa Thompson",
-    role: "Law Student",
+    degree: "Juris Doctor Candidate",
+    university: "Yale Law School",
     avatar: "/avatars/lisa.jpg",
-    text: "Studying law requires processing massive amounts of information. Learningly AI's smart summaries and case law breakdowns have been a game-changer.",
+    text: "Law school is brutal, but Learningly AI makes case law actually interesting! The summaries are gold for finals prep. ⚖️📚",
   },
   {
     name: "Ahmed Hassan",
-    role: "Language Learner",
+    degree: "BSc, Economics",
+    university: "London School of Economics",
     avatar: "/avatars/ahmed.jpg",
-    text: "Learning Spanish was always challenging until I found Learningly AI. The platform creates personalized flashcards from YouTube videos and articles.",
+    text: "This platform creates personalized flashcards from my lecture notes. My study sessions are now 10x more effective! 📊🎯",
   }
 ];
 
-const TestimonialCard = ({ name, role, text, avatar }: typeof testimonials[0]) => (
-  <div className="relative h-full w-80 flex-shrink-0 overflow-hidden rounded-2xl border bg-background p-6 shadow-lg transition-transform duration-300 hover:-translate-y-2 hover:shadow-2xl">
-    <Quote className="absolute top-6 right-6 h-16 w-16 text-muted-foreground/5" />
-    <div className="flex items-center gap-3">
-      <Avatar className="h-10 w-10">
+const TestimonialCard = ({ name, degree, university, text, avatar }: typeof testimonials[0]) => (
+  <div className="relative h-full w-96 flex-shrink-0 rounded-2xl p-6 bg-gradient-to-br from-gray-900/50 to-gray-800/30 border border-white/10 shadow-lg hover:shadow-2xl hover:border-electric-blue/30 transition-all duration-300">
+    <div className="flex items-center gap-4 mb-4">
+      <Avatar className="h-12 w-12">
         <AvatarImage src={avatar} alt={name} />
-        <AvatarFallback>{name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+        <AvatarFallback className="bg-gradient-to-r from-electric-blue to-purple text-white font-bold">
+          {name.split(' ').map(n => n[0]).join('')}
+        </AvatarFallback>
       </Avatar>
       <div>
-        <p className="font-heading font-semibold text-foreground">{name}</p>
-        <p className="text-sm text-muted-foreground">{role}</p>
+        <p className="text-lg font-bold text-white">{name}</p>
+        <p className="text-sm text-gray-400">{degree}, {university}</p>
       </div>
     </div>
-    <p className="mt-4 text-sm text-foreground">{text}</p>
+    <p className="text-gray-300 text-base leading-relaxed">{text}</p>
     <div className="mt-4 flex gap-1">
       {[...Array(5)].map((_, i) => (
         <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
@@ -75,40 +77,41 @@ const TestimonialCard = ({ name, role, text, avatar }: typeof testimonials[0]) =
 
 export const TestimonialsSection: React.FC = () => {
   return (
-    <section className="w-full overflow-hidden bg-muted py-24">
-      <div className="container mx-auto px-4">
-        
-        <SlideIn direction="down" className="text-center">
-          <Badge variant="outline" className="mb-4 border-primary/30 bg-primary/10 py-2 px-4 text-sm font-medium text-primary">
-            Wall of Love
-          </Badge>
-          <GradientText
-            colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
-            animationSpeed={4}
-            showBorder={false}
-            className="font-heading text-4xl font-bold tracking-tighter md:text-5xl"
+    <section id="testimonials" className="py-24 bg-gradient-to-b from-background via-slate-800/20 to-background">
+      <div className="container mx-auto px-6">
+        <div className="text-center max-w-4xl mx-auto mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            Trusted by Learners Worldwide
-          </GradientText>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-            See what students, educators, and professionals are saying about their experience with Learningly AI.
-          </p>
-        </SlideIn>
-      </div>
+            <span className="inline-block px-4 py-2 bg-gradient-to-r from-electric-blue to-purple text-white text-sm font-bold rounded-full mb-6">
+              💬 Real Student Stories
+            </span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6">
+              Students who{' '}
+              <ShinyText 
+                text="crushed their goals" 
+                disabled={false} 
+                speed={3} 
+                className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue via-purple to-lime-green font-extrabold"
+              />
+            </h2>
+            <p className="text-xl text-gray-400 leading-relaxed">
+              Don't just take our word for it! Here's what real students are saying about how Learningly AI transformed their study game! 🎓✨
+            </p>
+          </motion.div>
+        </div>
 
-      <div className="relative mt-16 flex h-[500px] w-full flex-col items-center justify-center overflow-hidden">
-        <Marquee pauseOnHover className="[--duration:60s]">
-          {testimonials.map((testimonial) => (
-            <TestimonialCard key={testimonial.name} {...testimonial} />
-          ))}
-        </Marquee>
-        <Marquee reverse pauseOnHover className="[--duration:60s]">
-          {testimonials.map((testimonial) => (
-            <TestimonialCard key={testimonial.name} {...testimonial} />
-          ))}
-        </Marquee>
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-muted"></div>
-<div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-muted"></div>
+        <div className="relative">
+          <Marquee pauseOnHover className="[--duration:80s]">
+            {testimonials.map((testimonial) => (
+              <TestimonialCard key={testimonial.name} {...testimonial} />
+            ))}
+          </Marquee>
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-background"></div>
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-background"></div>
+        </div>
       </div>
     </section>
   );

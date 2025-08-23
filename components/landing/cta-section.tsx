@@ -1,78 +1,58 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ArrowRight, Check } from 'lucide-react';
-import { SlideIn } from '@/components/react-bits';
-import DotPattern from '@/components/ui/dot-pattern';
-import { cn } from '@/lib/utils';
-import GradientText from '@/components/ui/gradient-text';
+import { ArrowRight } from 'lucide-react';
+import { ContactForm } from './contact-form';
+import { Rocket, Brain, Zap } from 'lucide-react';
 
 export const CTASection: React.FC = () => {
   return (
-    <section className="relative w-full bg-background py-24">
-      <div className="container mx-auto px-4">
-        <div className="relative mx-auto max-w-4xl overflow-hidden rounded-2xl bg-black/5 p-8">
-          <DotPattern
-            className={cn(
-              "[mask-image:radial-gradient(400px_at_center,white,transparent)]",
-            )}
-          />
-          <div className="relative h-64 w-full mb-8">
-            <Image
-              src="/images/landing/cta/cta-learning-revolution.png"
-              alt="Learning Revolution"
-              layout="fill"
-              objectFit="contain"
-              className="rounded-lg"
-            />
-          </div>
-          <SlideIn direction="down" className="text-center">
-            <GradientText
-              colors={["#000000", "#4d4d4d", "#000000", "#4d4d4d", "#000000"]}
-              animationSpeed={5}
-              showBorder={false}
-              className="font-heading text-4xl font-bold tracking-tighter md:text-5xl"
-            >
-              Start Your Learning Revolution
-            </GradientText>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-              Join over 10,000 learners and professionals who are achieving their goals faster with Learningly AI.
+    <section id="contact" className="py-24 bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+      <div className="container mx-auto px-6">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <span className="inline-block px-4 py-2 bg-gradient-to-r from-electric-blue to-purple text-white text-sm font-bold rounded-full mb-6">
+              🚀 Ready to Transform Your Study Game?
+            </span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6">
+              Stop <span className="text-electric-blue">struggling</span>, start{' '}
+              <span className="text-lime-green">succeeding</span>
+            </h2>
+            <p className="text-xl text-gray-400 leading-relaxed mb-8">
+              Join over 1 million students who've already upgraded their study game with Learningly AI. Your future self will thank you for starting today! 🎓✨
             </p>
-          </SlideIn>
-
-          <SlideIn direction="up" delay={0.1} className="mx-auto mt-8 max-w-md">
-            <div className="flex flex-col gap-4 sm:flex-row">
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                className="h-12 flex-1 bg-background"
-              />
-              <Button size="lg" className="h-12 px-8 bg-black text-white hover:bg-gray-800">
-                Get Started Free
-                <ArrowRight className="ml-2 h-5 w-5" />
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button size="lg" className="text-xl font-bold bg-gradient-to-r from-electric-blue to-purple hover:from-electric-blue/90 hover:to-purple/90 text-white shadow-2xl shadow-electric-blue/25">
+                <Rocket className="mr-3 h-6 w-6" />
+                Start Studying Smarter - Free!
+              </Button>
+              <Button variant="outline" size="lg" className="text-xl font-bold border-2 border-lime-green text-lime-green hover:bg-lime-green hover:text-black">
+                <Brain className="mr-3 h-6 w-6" />
+                See How It Works
               </Button>
             </div>
-          </SlideIn>
-
-          <SlideIn direction="up" delay={0.2}>
-            <ul className="mx-auto mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
-              <li className="flex items-center gap-2">
-                <Check size={16} className="text-black" />
-                14-day free trial
-              </li>
-              <li className="flex items-center gap-2">
-                <Check size={16} className="text-black" />
-                No credit card required
-              </li>
-              <li className="flex items-center gap-2">
-                <Check size={16} className="text-black" />
-                Cancel anytime
-              </li>
-            </ul>
-          </SlideIn>
+            <div className="flex flex-wrap gap-6 mt-6 text-sm text-gray-400">
+              <div className="flex items-center gap-2">
+                <Zap className="h-4 w-4 text-lime-green" />
+                <span>No credit card required</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Zap className="h-4 w-4 text-electric-blue" />
+                <span>Setup in 30 seconds</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Zap className="h-4 w-4 text-purple" />
+                <span>Cancel anytime</span>
+              </div>
+            </div>
+          </motion.div>
+          <ContactForm />
         </div>
       </div>
     </section>

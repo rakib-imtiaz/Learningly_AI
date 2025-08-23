@@ -1,0 +1,68 @@
+/* 
+ * Responsive CSS utilities for consistent display across different screen sizes
+ */
+
+/* Base container styles */
+.responsive-container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+/* Font size scaling based on viewport */
+.responsive-text {
+  font-size: clamp(14px, 1vw + 10px, 18px);
+}
+
+.responsive-heading {
+  font-size: clamp(20px, 2vw + 16px, 28px);
+}
+
+/* Utility classes for responsive padding/margins */
+.responsive-p {
+  padding: clamp(8px, 1vw + 6px, 16px);
+}
+
+.responsive-m {
+  margin: clamp(8px, 1vw + 6px, 16px);
+}
+
+/* 13" laptop optimized layout classes */
+@media (min-width: 1024px) and (max-width: 1280px) {
+  .laptop-compact {
+    font-size: 0.95em;
+  }
+  
+  .laptop-spacing {
+    padding: 0.8em;
+  }
+  
+  .laptop-content {
+    max-width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Focus states for accessibility with better visibility */
+.focus-visible:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring));
+}
+
+/* Helper for preventing layout shifts */
+.preserve-dimensions {
+  min-height: 0;
+  contain: strict;
+}
+
+/* Optimized scrolling for mobile devices */
+@media (max-width: 640px) {
+  .mobile-smooth-scroll {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+

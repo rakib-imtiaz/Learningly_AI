@@ -33,7 +33,7 @@ export default function AppSidebar({
     <div
       className={`
         fixed h-screen
-        ${isMobile ? 'flex' : 'hidden md:flex'}
+        ${isMobile ? 'flex' : 'hidden sm:flex'}
         flex-col bg-[#1C1C1C] text-white z-40 transition-all duration-300
         ${sidebarCollapsed ? 'w-[60px]' : 'w-[250px]'}
         ${isMobile ? 'w-full' : ''}

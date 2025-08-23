@@ -18,10 +18,21 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import AppSidebar from "@/components/app-sidebar"
 import { usePathname } from 'next/navigation'
+import { useDeviceSize } from "@/hooks/use-device-size"
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false)
   const pathname = usePathname()
+  const deviceSize = useDeviceSize()
+  
+  // Auto-collapse sidebar on smaller screens like laptops
+  React.useEffect(() => {
+    if (deviceSize === 'laptop') {
+      setSidebarCollapsed(true)
+    } else if (deviceSize === 'desktop') {
+      setSidebarCollapsed(false)
+    }
+  }, [deviceSize])
 
   const navigationItems = [
     { icon: Home, label: "Dashboard", href: "/dashboard", active: pathname === '/dashboard' },
@@ -39,9 +50,25 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     { icon: Settings, label: "Settings", href: "/settings" },
   ]
 
+  // Determine content padding based on screen size
+  const getContentPadding = () => {
+    switch(deviceSize) {
+      case 'mobile':
+        return 'p-3';
+      case 'tablet':
+        return 'p-4';
+      case 'laptop':
+        return 'p-5';
+      case 'desktop':
+        return 'p-6';
+      default:
+        return 'p-4';
+    }
+  }
+
   return (
     <div className="min-h-screen bg-white text-black">
-      <div className="hidden md:block">
+      <div className="hidden sm:block">
         <AppSidebar
           sidebarCollapsed={sidebarCollapsed}
           setSidebarCollapsed={setSidebarCollapsed}
@@ -50,12 +77,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         />
       </div>
       
-      <main className={`${sidebarCollapsed ? 'md:ml-[60px]' : 'md:ml-[250px]'} transition-all duration-300`}>
+      <main 
+        className={`
+          ${sidebarCollapsed ? 'sm:ml-[60px]' : 'sm:ml-[250px]'} 
+          transition-all duration-300
+          ${getContentPadding()}
+        `}
+      >
         {children}
       </main>
 
       {/* Mobile Sidebar */}
-      <div className="md:hidden">
+      <div className="sm:hidden">
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="fixed top-4 left-4 z-50 text-black">
