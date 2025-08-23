@@ -86,27 +86,27 @@ const QuizComponent = ({
   const isCorrect = selected === data[current].correct;
 
   return (
-    <Card className="w-full rounded-2xl border-2 border-transparent bg-muted/50 p-8">
-      <h3 className="font-heading text-xl font-semibold text-foreground">{data[current].question}</h3>
-      <div className="mt-6 space-y-3">
-        {data[current].options.map((option, index) => (
-          <motion.button
-            key={index}
-            onClick={() => setSelected(index)}
-            disabled={selected !== null}
-            className={cn(
-              "flex w-full items-center gap-3 rounded-lg border-2 p-4 text-left transition-all",
-              selected === null && "hover:border-primary/50 hover:bg-black/5",
-              selected !== null && index === data[current].correct && "border-green-500 bg-green-50 text-green-700",
-              selected !== null && selected === index && index !== data[current].correct && "border-red-500 bg-red-50 text-red-700",
-              selected !== null && selected !== index && "opacity-50"
-            )}
+                   <Card className="w-full rounded-2xl border-2 border-gray-700 bg-gray-900/80 p-4 shadow-xl">
+               <h3 className="font-heading text-base font-semibold text-white mb-3">{data[current].question}</h3>
+               <div className="mt-3 space-y-2">
+         {data[current].options.map((option, index) => (
+           <motion.button
+             key={index}
+             onClick={() => setSelected(index)}
+             disabled={selected !== null}
+             className={cn(
+                               "flex w-full items-center gap-2 rounded-lg border-2 p-2 text-left transition-all duration-200 text-sm",
+               selected === null && "border-gray-600 bg-gray-800/50 text-white hover:border-electric-blue/50 hover:bg-gray-800/80 hover:shadow-lg",
+               selected !== null && index === data[current].correct && "border-green-500 bg-green-900/30 text-green-100 shadow-lg",
+               selected !== null && selected === index && index !== data[current].correct && "border-red-500 bg-red-900/30 text-red-100 shadow-lg",
+               selected !== null && selected !== index && "border-gray-600 bg-gray-800/30 text-gray-400 opacity-60"
+             )}
             whileTap={{ scale: selected === null ? 0.98 : 1 }}
           >
-            <div className={cn("flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2", selected !== null && index === data[current].correct && "border-green-500 bg-green-500 text-white", selected !== null && selected === index && index !== data[current].correct && "border-red-500 bg-red-500 text-white")}>
-              {selected !== null && index === data[current].correct && <Check size={14} />}
-              {selected !== null && selected === index && index !== data[current].correct && <X size={14} />}
-            </div>
+                                                   <div className={cn("flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full border-2", selected === null && "border-gray-500 bg-gray-700", selected !== null && index === data[current].correct && "border-green-400 bg-green-500 text-white shadow-lg", selected !== null && selected === index && index !== data[current].correct && "border-red-400 bg-red-500 text-white shadow-lg")}>
+                               {selected !== null && index === data[current].correct && <Check size={12} />}
+                {selected !== null && selected === index && index !== data[current].correct && <X size={12} />}
+             </div>
             <span>{option}</span>
           </motion.button>
         ))}
@@ -117,22 +117,22 @@ const QuizComponent = ({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="mt-6"
+                                                   className="mt-3"
           >
-            <div className="rounded-lg bg-black/5 p-4">
-              <div className="flex items-start gap-3">
-                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-black/5 text-black">
-                  <Info size={18} />
-                </div>
-                <div>
-                  <h4 className="font-heading font-semibold text-foreground">Explanation</h4>
-                  <p className="mt-1 text-sm text-muted-foreground">{data[current].explanation}</p>
-                </div>
-              </div>
-            </div>
-            <Button onClick={onNext} className="mt-4 w-full">
-              Next Question <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+                                                   <div className="rounded-lg bg-gray-800/50 border border-gray-600 p-3 shadow-lg">
+               <div className="flex items-start gap-3">
+                                   <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-electric-blue/20 text-electric-blue">
+                    <Info size={14} />
+                 </div>
+                 <div>
+                                       <h4 className="font-heading font-semibold text-white text-sm">Explanation</h4>
+                    <p className="mt-1 text-xs text-gray-300 leading-relaxed">{data[current].explanation}</p>
+                 </div>
+               </div>
+             </div>
+                                                   <Button onClick={onNext} className="mt-2 w-full bg-gradient-to-r from-electric-blue to-purple hover:from-electric-blue/90 hover:to-purple/90 text-white shadow-lg text-sm py-2">
+                                Next Question <ArrowRight className="ml-1.5 h-3 w-3" />
+             </Button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -153,7 +153,7 @@ const FlashcardComponent = ({
 
   return (
     <div className="w-full">
-      <div style={{ perspective: '1000px' }} className="h-80 w-full">
+                           <div style={{ perspective: '1000px' }} className="h-48 w-full">
         <motion.div
           className="relative h-full w-full"
           style={{ transformStyle: 'preserve-3d' }}
@@ -162,21 +162,21 @@ const FlashcardComponent = ({
           onClick={() => setIsFlipped(!isFlipped)}
         >
           {/* Front */}
-          <div className="absolute inset-0 h-full w-full rounded-2xl bg-muted/50 p-8 text-center shadow-sm" style={{ backfaceVisibility: 'hidden' }}>
+                     <div className="absolute inset-0 h-full w-full rounded-2xl bg-muted/50 p-4 text-center shadow-sm" style={{ backfaceVisibility: 'hidden' }}>
             <div className="flex h-full flex-col items-center justify-center">
-              <p className="font-heading text-2xl font-semibold text-foreground">{data[current].front}</p>
+                             <p className="font-heading text-lg font-semibold text-foreground">{data[current].front}</p>
             </div>
           </div>
           {/* Back */}
-          <div className="absolute inset-0 h-full w-full rounded-2xl bg-primary/10 p-8 text-center shadow-sm" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
+                     <div className="absolute inset-0 h-full w-full rounded-2xl bg-primary/10 p-4 text-center shadow-sm" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
             <div className="flex h-full flex-col items-center justify-center">
-              <p className="text-lg text-muted-foreground">{data[current].back}</p>
+                             <p className="text-sm text-muted-foreground">{data[current].back}</p>
             </div>
           </div>
         </motion.div>
       </div>
-      <Button onClick={onNext} className="mt-6 w-full">
-        Next Card <ArrowRight className="ml-2 h-4 w-4" />
+             <Button onClick={onNext} className="mt-3 w-full text-sm py-2">
+                 Next Card <ArrowRight className="ml-1.5 h-3 w-3" />
       </Button>
     </div>
   );
@@ -203,62 +203,64 @@ export const StudyFlowSection: React.FC = () => {
   const demoData = demos[activeDemo].data;
   
   return (
-    <section className="w-full py-24">
+         <section className="w-full py-16">
       <div className="container mx-auto px-4">
-        <SlideIn direction="down" className="text-center">
-          <Badge variant="outline" className="mb-4 border-primary/30 bg-primary/10 py-2 px-4 text-sm font-medium text-primary">
-            Interactive Learning
-          </Badge>
-          <ShinyText 
-            text="Experience Learning That Adapts to You" 
-            disabled={false} 
-            speed={3} 
-            className="font-heading text-4xl font-bold tracking-tighter md:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-electric-blue via-purple to-lime-green"
-          />
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-            Our AI-powered tools are not just smart, they're designed to make your study sessions more effective and engaging.
-          </p>
-        </SlideIn>
+                 <SlideIn direction="down" className="text-center mb-8">
+           <ShinyText 
+             text="Experience Learning That Adapts to You" 
+             disabled={false} 
+             speed={3} 
+             className="font-heading text-2xl font-bold tracking-tighter md:text-3xl lg:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-electric-blue via-purple to-lime-green mb-4"
+           />
+                        <p className="mx-auto mt-4 max-w-2xl text-base text-gray-300 leading-relaxed">
+             Our AI-powered tools are not just smart, they're designed to make your study sessions more effective and engaging.
+           </p>
+         </SlideIn>
 
-        <div className="mt-12 flex justify-center">
-          <div className="rounded-lg bg-muted/50 p-1.5">
-            {(Object.keys(demos) as DemoType[]).map(key => {
-              const Icon = demos[key].icon;
-              return (
-                <Button 
-                  key={key} 
-                  variant={activeDemo === key ? "secondary" : "ghost"}
-                  onClick={() => setActiveDemo(key)}
-                  className="w-40"
-                >
-                  <Icon className="mr-2 h-4 w-4" />
-                  {demos[key].title}
-                </Button>
-              )
-            })}
-          </div>
-        </div>
+                 <div className="mt-4 flex justify-center mb-6">
+           <div className="rounded-xl bg-gray-800/50 border border-gray-700 p-2 shadow-xl">
+             {(Object.keys(demos) as DemoType[]).map(key => {
+               const Icon = demos[key].icon;
+               return (
+                 <Button 
+                   key={key} 
+                   variant={activeDemo === key ? "secondary" : "ghost"}
+                   onClick={() => setActiveDemo(key)}
+                   className={cn(
+                     "w-32 h-8 transition-all duration-200 font-semibold text-sm",
+                     activeDemo === key 
+                       ? "bg-gradient-to-r from-electric-blue to-purple text-white shadow-lg" 
+                       : "text-gray-300 hover:text-white hover:bg-gray-700/50"
+                   )}
+                 >
+                   <Icon className="mr-1.5 h-3 w-3" />
+                   {demos[key].title}
+                 </Button>
+               )
+             })}
+           </div>
+         </div>
 
-        <div className="mx-auto mt-10 max-w-3xl">
-          <div className="relative h-96 w-full mb-4">
-            <Image
-              src={demos[activeDemo].image}
-              alt={demos[activeDemo].title}
-              layout="fill"
-              objectFit="contain"
-              className="rounded-lg"
-            />
-          </div>
-          <div className="mb-4 rounded-2xl border-2 border-transparent bg-muted/50 p-4">
-            <div className="flex items-center justify-between text-sm">
-              <p className="font-medium text-muted-foreground">
-                Progress: <span className="font-semibold text-foreground">{currentIndices[activeDemo] + 1} / {demoData.length}</span>
-              </p>
-              <div className="w-1/3">
-                <Progress value={progress} />
-              </div>
-            </div>
-          </div>
+                 <div className="mx-auto mt-8 max-w-3xl">
+           <div className="relative h-48 w-full mb-4 rounded-2xl overflow-hidden border border-gray-700 bg-gray-900/30">
+             <Image
+               src={demos[activeDemo].image}
+               alt={demos[activeDemo].title}
+               layout="fill"
+               objectFit="contain"
+               className="rounded-2xl p-4"
+             />
+           </div>
+                     <div className="mb-3 rounded-2xl border-2 border-gray-700 bg-gray-900/50 p-3 shadow-xl">
+             <div className="flex items-center justify-between">
+               <p className="font-semibold text-gray-300 text-xs">
+                 Progress: <span className="font-bold text-white text-sm">{currentIndices[activeDemo] + 1} / {demoData.length}</span>
+               </p>
+               <div className="w-1/2">
+                 <Progress value={progress} className="h-1.5 bg-gray-700" />
+               </div>
+             </div>
+           </div>
 
           <AnimatePresence mode="wait">
             <motion.div

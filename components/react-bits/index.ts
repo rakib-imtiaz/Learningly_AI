@@ -12,3 +12,4 @@ export { Confetti } from './confetti';
 export { Typewriter } from './typewriter';
 export { default as LightRays } from './light-rays';
 export { default as ShinyText } from './shiny-text';
+export { default as DecryptedText } from './decrypted-text';

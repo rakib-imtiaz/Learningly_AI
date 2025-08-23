@@ -1,9 +1,18 @@
 "use client";
 
 import * as React from "react";
-import { Toaster as Sonner } from "sonner";
+import { Toaster as Sonner, toast as sonnerToast } from "sonner";
 
-const ToastContext = React.createContext({ toast: (options: any) => {} });
+interface ToastContextType {
+  toasts: any[];
+  showSuccess: (message: string) => void;
+  showError: (message: string) => void;
+  showInfo: (message: string) => void;
+  showWarning: (message: string) => void;
+  hideToast: (id?: string) => void;
+}
+
+const ToastContext = React.createContext<ToastContextType | undefined>(undefined);
 
 export function ToastProvider({
   children,
@@ -11,8 +20,37 @@ export function ToastProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const showSuccess = React.useCallback((message: string) => {
+    sonnerToast.success(message);
+  }, []);
+
+  const showError = React.useCallback((message: string) => {
+    sonnerToast.error(message);
+  }, []);
+
+  const showInfo = React.useCallback((message: string) => {
+    sonnerToast.info(message);
+  }, []);
+
+  const showWarning = React.useCallback((message: string) => {
+    sonnerToast.warning(message);
+  }, []);
+
+  const hideToast = React.useCallback((id?: string) => {
+    sonnerToast.dismiss(id);
+  }, []);
+
+  const value = React.useMemo(() => ({
+    toasts: [], // This could be enhanced to track actual toasts if needed
+    showSuccess,
+    showError,
+    showInfo,
+    showWarning,
+    hideToast,
+  }), [showSuccess, showError, showInfo, showWarning, hideToast]);
+
   return (
-    <ToastContext.Provider value={{ toast }}>
+    <ToastContext.Provider value={value}>
       {children}
       <Sonner
         className="toaster group"
@@ -33,7 +71,7 @@ export function ToastProvider({
   );
 }
 
-export const useToast = () => {
+export const useToast = (): ToastContextType => {
   const context = React.useContext(ToastContext);
   if (context === undefined) {
     throw new Error("useToast must be used within a ToastProvider");

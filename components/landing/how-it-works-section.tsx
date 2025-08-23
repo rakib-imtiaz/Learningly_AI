@@ -61,18 +61,18 @@ const Step = ({ step, index, total }: { step: typeof steps[0], index: number, to
   const Icon = step.icon;
 
   return (
-    <div ref={ref} className="flex items-start gap-8">
+         <div ref={ref} className="flex items-start gap-6">
       <div className="relative flex flex-col items-center">
         <motion.div
           initial={{ scale: 0 }}
           animate={inView ? { scale: 1 } : {}}
           transition={{ duration: 0.5, delay: 0.2 }}
-                     className={cn("z-10 flex h-16 w-16 items-center justify-center rounded-full border-4 border-gray-700 bg-gray-800/50", step.bg)}
+                     className={cn("z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 border-gray-700 bg-gray-800/50", step.bg)}
         >
-                     <Icon className="h-8 w-8 text-white" />
+                     <Icon className="h-5 w-5 text-white" />
         </motion.div>
                  {index < total - 1 && (
-           <div className="absolute top-16 h-full w-1 bg-gray-600/30">
+           <div className="absolute top-10 h-full w-1 bg-gray-600/30">
              <motion.div
                className="h-full w-full origin-top bg-gradient-to-b from-white to-transparent"
               initial={{ scaleY: 0 }}
@@ -83,9 +83,9 @@ const Step = ({ step, index, total }: { step: typeof steps[0], index: number, to
         )}
       </div>
 
-      <SlideIn direction={index % 2 === 0 ? 'left' : 'right'} delay={0.3} className="w-full pb-16">
-                 <div className="rounded-2xl bg-gray-900/50 border border-gray-700 p-6">
-          <div className="relative h-48 w-full mb-4">
+             <SlideIn direction={index % 2 === 0 ? 'left' : 'right'} delay={0.3} className="w-full pb-8">
+                                   <div className="rounded-2xl bg-gray-900/50 border border-gray-700 p-3">
+                     <div className="relative h-32 w-full mb-3">
             <Image
               src={step.image}
               alt={step.title}
@@ -94,15 +94,15 @@ const Step = ({ step, index, total }: { step: typeof steps[0], index: number, to
               className="rounded-lg"
             />
           </div>
-                     <Badge variant="outline" className="mb-3 border-white/30 bg-white/10 text-sm font-medium text-white">
+                     <Badge variant="outline" className="mb-2 border-white/30 bg-white/10 text-xs font-medium text-white">
              Step {index + 1}
            </Badge>
-                     <h3 className="mb-2 font-heading text-2xl font-semibold text-white">{step.title}</h3>
-           <p className="mb-4 text-gray-300">{step.description}</p>
-                     <ul className="space-y-2">
+                     <h3 className="mb-2 font-heading text-lg font-semibold text-white">{step.title}</h3>
+                       <p className="mb-2 text-xs text-gray-300">{step.description}</p>
+                     <ul className="space-y-1">
              {step.details.map(detail => (
-               <li key={detail} className="flex items-center text-sm text-gray-300">
-                 <Check className="mr-2 h-4 w-4 text-lime-green" />
+               <li key={detail} className="flex items-center text-xs text-gray-300">
+                 <Check className="mr-1.5 h-2.5 w-2.5 text-lime-green" />
                  <span>{detail}</span>
                </li>
              ))}
@@ -120,7 +120,7 @@ export const HowItWorksSection: React.FC = () => {
   });
 
   return (
-    <section className="w-full bg-background py-24">
+    <section className="w-full bg-background py-16">
       <div className="container mx-auto px-4">
         
         <div ref={headerRef} className="text-center">
@@ -139,11 +139,11 @@ export const HowItWorksSection: React.FC = () => {
             animate={headerInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <ShinyText 
-              text="From Content to Mastery in 4 Steps" 
-              disabled={false} 
-              speed={3} 
-              className="font-heading text-4xl font-bold tracking-tighter md:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-electric-blue via-purple to-lime-green"
+                                    <ShinyText
+              text="From Content to Mastery in 4 Steps"
+              disabled={false}
+              speed={3}
+              className="font-heading text-2xl font-bold tracking-tighter md:text-3xl lg:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-electric-blue via-purple to-lime-green"
             />
           </motion.div>
           
@@ -152,14 +152,14 @@ export const HowItWorksSection: React.FC = () => {
              animate={headerInView ? { opacity: 1, y: 0 } : {}}
              transition={{ duration: 0.8, delay: 0.6 }}
            >
-             <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-300">
+                           <p className="mx-auto mt-3 max-w-xl text-sm text-gray-300">
                Our streamlined process makes it effortless to transform your study materials into powerful, interactive learning tools.
              </p>
            </motion.div>
         </div>
 
-        <motion.div 
-          className="relative mx-auto mt-16 max-w-3xl"
+                 <motion.div 
+           className="relative mx-auto mt-8 max-w-2xl"
           initial={{ opacity: 0, y: 50 }}
           animate={headerInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, delay: 0.8 }}

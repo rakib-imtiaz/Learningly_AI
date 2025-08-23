@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { Rocket, Brain, Zap } from 'lucide-react';
 import { NavigationHeader } from './navigation-header';
-import { Typewriter, SlideIn, FadeContent } from '@/components/react-bits';
+import { Typewriter, SlideIn, FadeContent, DecryptedText } from '@/components/react-bits';
 
 export const HeroSection: React.FC = () => {
   return (
@@ -26,19 +26,29 @@ export const HeroSection: React.FC = () => {
         </div>
         <div className="container mx-auto px-6 relative z-10">
           <SlideIn direction="down" delay={0.1}>
-            <div className="mb-6">
-              <span className="inline-block px-4 py-2 bg-gradient-to-r from-electric-blue to-purple text-white text-sm font-bold rounded-full mb-4">
+            <div className="mb-4">
+              <span className="inline-block px-3 py-1.5 bg-gradient-to-r from-electric-blue to-purple text-white text-xs font-bold rounded-full mb-3">
                 🚀 #1 AI Study Tool for Students
               </span>
             </div>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight mb-6">
-              Stop <span className="text-electric-blue">Cramming</span>, Start{' '}
-              <span className="text-lime-green">Learning</span>
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-white leading-tight mb-4">
+              <DecryptedText 
+                text="Stop Cramming, Start Learning"
+                speed={80}
+                maxIterations={15}
+                sequential={true}
+                revealDirection="center"
+                useOriginalCharsOnly={true}
+                className="text-white"
+                encryptedClassName="text-gray-500"
+                animateOn="view"
+                parentClassName="cursor-pointer"
+              />
             </h1>
           </SlideIn>
           
           <SlideIn direction="down" delay={0.3}>
-            <div className="max-w-4xl mx-auto mb-8">
+            <div className="max-w-3xl mx-auto mb-6">
               <Typewriter 
                 text={[
                   "Turn any boring textbook into interactive study materials in seconds! 📚✨",
@@ -48,19 +58,19 @@ export const HeroSection: React.FC = () => {
                 ]}
                 speed={50}
                 loop={true}
-                className="text-lg md:text-xl lg:text-2xl text-gray-300 font-medium"
+                className="text-sm md:text-base lg:text-lg text-gray-300 font-medium"
               />
             </div>
           </SlideIn>
 
           <FadeContent delay={0.6}>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-8">
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button size="lg" className="px-10 py-7 text-xl font-bold bg-gradient-to-r from-electric-blue to-purple hover:from-electric-blue/90 hover:to-purple/90 text-white shadow-2xl shadow-electric-blue/25">
-                  <Rocket className="mr-3 h-6 w-6" />
+                <Button size="lg" className="px-6 py-4 text-base font-bold bg-gradient-to-r from-electric-blue to-purple hover:from-electric-blue/90 hover:to-purple/90 text-white shadow-2xl shadow-electric-blue/25">
+                  <Rocket className="mr-2 h-5 w-5" />
                   Start Studying Smarter - Free!
                 </Button>
               </motion.div>
@@ -68,8 +78,8 @@ export const HeroSection: React.FC = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button variant="outline" size="lg" className="px-10 py-7 text-xl font-bold border-2 border-lime-green text-lime-green hover:bg-lime-green hover:text-black">
-                  <Brain className="mr-3 h-6 w-6" />
+                <Button variant="outline" size="lg" className="px-6 py-4 text-base font-bold border-2 border-lime-green text-lime-green hover:bg-lime-green hover:text-black">
+                  <Brain className="mr-2 h-5 w-5" />
                   See How It Works
                 </Button>
               </motion.div>
@@ -77,17 +87,17 @@ export const HeroSection: React.FC = () => {
           </FadeContent>
 
           <FadeContent delay={0.8}>
-            <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-400">
+            <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-400">
               <div className="flex items-center gap-2">
-                <Zap className="h-4 w-4 text-lime-green" />
+                                  <Zap className="h-3 w-3 text-lime-green" />
                 <span>No credit card required</span>
               </div>
               <div className="flex items-center gap-2">
-                <Zap className="h-4 w-4 text-electric-blue" />
+                                  <Zap className="h-3 w-3 text-electric-blue" />
                 <span>Setup in 30 seconds</span>
               </div>
               <div className="flex items-center gap-2">
-                <Zap className="h-4 w-4 text-purple" />
+                                  <Zap className="h-3 w-3 text-purple" />
                 <span>Cancel anytime</span>
               </div>
             </div>

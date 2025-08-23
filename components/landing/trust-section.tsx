@@ -60,23 +60,23 @@ const universityLogos = [
 
 const LogoItem = ({ logo }: { logo: typeof universityLogos[0] }) => (
   <motion.div
-    whileHover={{ scale: 1.1 }}
-    className="flex items-center justify-center px-8 h-24 transition-all duration-300"
+    whileHover={{ scale: 1.05 }}
+    className="flex items-center justify-center px-6 h-28 transition-all duration-300"
   >
-    <div className="w-48 h-20 bg-white rounded-lg flex items-center justify-center border border-gray-200 hover:border-primary/50 transition-colors p-4">
+    <div className="w-56 h-24 bg-white rounded-xl flex items-center justify-center border-2 border-gray-200 hover:border-electric-blue/50 transition-colors p-6 shadow-lg hover:shadow-xl">
       <Image
         src={logo.src}
         alt={logo.name}
-        width={180}
-        height={80}
-        className="object-contain w-full h-full"
+        width={220}
+        height={100}
+        className="object-contain w-full h-full max-w-[200px] max-h-[80px]"
         onError={(e) => {
           // Fallback to text if image fails to load
           const target = e.target as HTMLImageElement;
           target.style.display = 'none';
           const parent = target.parentElement;
           if (parent) {
-            parent.innerHTML = `<span class="text-gray-600 text-sm font-medium">${logo.fallback}</span>`;
+            parent.innerHTML = `<span class="text-gray-700 text-lg font-bold">${logo.fallback}</span>`;
           }
         }}
       />
@@ -104,12 +104,12 @@ export const TrustSection: React.FC = () => {
         </motion.div>
         
         <div className="relative">
-          <Marquee 
-            className="py-4" 
-            pauseOnHover={true}
-            repeat={3}
-            style={{ '--duration': '30s' } as React.CSSProperties}
-          >
+                  <Marquee 
+          className="py-8" 
+          pauseOnHover={true}
+          repeat={3}
+          style={{ '--duration': '40s' } as React.CSSProperties}
+        >
             {universityLogos.map((logo, index) => (
               <LogoItem key={`${logo.name}-${index}`} logo={logo} />
             ))}
