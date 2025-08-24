@@ -9,46 +9,74 @@ import { ShinyText } from '@/components/react-bits';
 
 const testimonials = [
   {
-    name: "Sarah Chen",
-    degree: "MD Candidate",
-    university: "Harvard Medical School",
-    avatar: "/avatars/sarah.jpg",
-    text: "Learningly AI saved my life during med school! The AI flashcards helped me memorize anatomy like magic. My grades went from B's to A's! 🩺✨",
-  },
-  {
-    name: "Marcus Johnson",
-    degree: "PhD, Computer Science",
+    name: "Rowan Archer",
+    degree: "Computer Science and Political Science Major",
     university: "Stanford University",
-    avatar: "/avatars/marcus.jpg", 
-    text: "As a CS professor, I'm blown away by how well this AI understands complex concepts. My students love the interactive quizzes! 💻🚀",
+    avatar: "/avatars/rowan.jpg",
+    text: "I use Learningly every day to generate flashcards from my readings and quizzes for my exams. It's like having an AI study buddy built just for me.",
   },
   {
-    name: "Emma Rodriguez",
-    degree: "High School Student",
-    university: "Phillips Exeter Academy",
+    name: "Emily Zhang",
+    degree: "Economics and Psychology",
+    university: "Harvard University",
+    avatar: "/avatars/emily.jpg", 
+    text: "Learningly AI turned my overwhelming coursework into manageable daily tasks. It's the best academic assistant I've ever used.",
+  },
+  {
+    name: "Ryan Brooks",
+    degree: "Mechanical Engineering",
+    university: "MIT",
+    avatar: "/avatars/ryan.jpg",
+    text: "For engineering students like me, Learningly is essential. It helps me solve problems, revise quickly, and even visualize concepts.",
+  },
+  {
+    name: "Hannah Rivera",
+    degree: "Ethics, Politics, and Economics",
+    university: "Yale University",
+    avatar: "/avatars/hannah.jpg",
+    text: "Whether I'm writing essays or prepping for exams, Learningly makes the process smarter and faster. Total game-changer!",
+  },
+  {
+    name: "Noah Johnson",
+    degree: "Neuroscience Major",
+    university: "Princeton University",
+    avatar: "/avatars/noah.jpg",
+    text: "Learningly AI helps me go from information overload to clarity. The flashcards and full-length tests are pure gold.",
+  },
+  {
+    name: "Sarah Malik",
+    degree: "Student",
+    university: "The Johns Hopkins University School of Medicine",
+    avatar: "/avatars/sarah.jpg",
+    text: "Medical school is intense, but Learningly AI's quiz generator and concept maps make review sessions actually effective.",
+  },
+  {
+    name: "Emma Johnson",
+    degree: "Law Student",
+    university: "University of Oxford",
     avatar: "/avatars/emma.jpg",
-    text: "Finally, a study tool that doesn't make me want to fall asleep! The AI tutor explains things in ways I actually understand. Game changer! 🎓💡",
+    text: "Learningly AI's critical thinking quizzes helped me revise for my law exams. It's intelligent, fast, and actually understands complex material.",
   },
   {
-    name: "Dr. James Park",
-    degree: "Corporate Trainer",
-    university: "MIT Sloan",
-    avatar: "/avatars/james.jpg",
-    text: "We use Learningly AI for employee training, and it's revolutionized our onboarding. Everyone learns faster and retains more! 🏢📈",
+    name: "Jessica Thompson",
+    degree: "Biology Student",
+    university: "King's College London",
+    avatar: "/avatars/jessica.jpg",
+    text: "My dissertation research got easier with Learningly AI's summarization and citation tools. I can't imagine studying without it now.",
   },
   {
-    name: "Lisa Thompson",
-    degree: "Juris Doctor Candidate",
-    university: "Yale Law School",
-    avatar: "/avatars/lisa.jpg",
-    text: "Law school is brutal, but Learningly AI makes case law actually interesting! The summaries are gold for finals prep. ⚖️📚",
+    name: "Rohan Sharma",
+    degree: "Electrical Engineering",
+    university: "IIT Delhi",
+    avatar: "/avatars/rohan.jpg",
+    text: "No other tool breaks down STEM concepts like Learningly AI. The real-time explanations and step-by-step solutions are game-changing.",
   },
   {
-    name: "Ahmed Hassan",
-    degree: "BSc, Economics",
-    university: "London School of Economics",
-    avatar: "/avatars/ahmed.jpg",
-    text: "This platform creates personalized flashcards from my lecture notes. My study sessions are now 10x more effective! 📊🎯",
+    name: "Omar Siddique",
+    degree: "Rhodes Scholar",
+    university: "University of Oxford",
+    avatar: "/avatars/omar.jpg",
+    text: "As a Rhodes Scholar, efficiency is key. Learningly AI saves me hours every week while improving my performance.",
   }
 ];
 
@@ -86,19 +114,20 @@ export const TestimonialsSection: React.FC = () => {
             transition={{ duration: 0.6 }}
           >
             <span className="inline-block px-4 py-2 bg-gradient-to-r from-electric-blue to-purple text-white text-sm font-bold rounded-full mb-6">
-              💬 Real Student Stories
+              Real Student Stories
             </span>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6">
-              Students who{' '}
+              Students{' '}
               <ShinyText 
-                text="crushed their goals" 
+                text="achieving their goals" 
                 disabled={false} 
                 speed={3} 
                 className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue via-purple to-lime-green font-extrabold"
               />
+              {' '}with Learningly AI
             </h2>
             <p className="text-xl text-gray-400 leading-relaxed">
-              Don't just take our word for it! Here's what real students are saying about how Learningly AI transformed their study game! 🎓✨
+              Don't just take our word for it—hear how students are transforming their study habits and boosting their grades with Learningly AI
             </p>
           </motion.div>
         </div>

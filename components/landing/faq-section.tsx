@@ -8,79 +8,77 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { ShinyText } from '@/components/react-bits';
+import { Plus, Minus } from 'lucide-react';
 
 const faqs = [
-  {
-    question: "What is Learningly AI?",
-    answer: "Learningly AI is an intelligent study platform that transforms your learning materials into interactive content. It uses advanced AI to create summaries, quizzes, flashcards, and provides personalized tutoring to help you study smarter, not harder! 🚀"
-  },
-  {
-    question: "Does Learningly AI support exam preparation?",
-    answer: "Absolutely! Our AI generates practice questions, creates comprehensive study guides, and adapts to your learning style. Whether you're prepping for finals, standardized tests, or professional certifications, we've got you covered! 📚✨"
-  },
-  {
-    question: "Can Learningly AI help with STEM subjects?",
-    answer: "Yes! Our AI excels at breaking down complex STEM concepts into digestible explanations. From calculus to chemistry, physics to programming - we make the toughest subjects easier to understand with visual explanations and step-by-step breakdowns! 🧮🔬"
-  },
-  {
-    question: "How accurate are the AI-generated summaries?",
-    answer: "Our AI is trained on millions of educational documents and continuously improved. The summaries maintain the core concepts while making them more accessible. You can always review and edit them to ensure they match your specific needs! ✅"
-  },
-  {
-    question: "Is my data secure and private?",
-    answer: "Your privacy is our top priority! All your documents and study materials are encrypted and stored securely. We never share your personal data with third parties, and you have full control over your content. 🔒"
-  },
-  {
-    question: "Can I use Learningly AI on my mobile device?",
-    answer: "Yes! Learningly AI works seamlessly across all devices - desktop, tablet, and mobile. Study on the go with our responsive design that adapts to any screen size! 📱💻"
-  }
+    {
+        question: "What is Learningly, and how is it different from other AI tools?",
+        answer: "Learningly is an all-in-one learning assistant built specifically for students. Unlike other general-purpose AI tools, Learningly offers an integrated suite that covers reading, writing, exam prep, an individual search bar, and STEM support. It's your academic co-pilot—not just a chatbot."
+      },
+      {
+        question: "Does Learningly support exam preparation?",
+        answer: "Absolutely. Learningly includes a full-length exam-prep part customized for everyone. It creates custom practice tests, explains each answer with AI-generated walkthroughs, and tracks your progress over time—so you study smarter, not harder. It even has a quiz part, which allows you to set your own personalized quizzes while revising through summary, notes, flashcards, etc!"
+      },
+      {
+        question: "I study STEM. Can Learningly actually help with math, physics, or chemistry?",
+        answer: "Yes! Our STEM Visualizer breaks down complex problems into easy-to-follow steps with formulas, graphs, and visual aids. Whether you're solving calculus, balancing equations, or decoding vectors—Learningly's got your back."
+      },
+      {
+        question: "Will you keep my data private and secure?",
+        answer: "100%. Your privacy is our top priority. All your materials and activities are encrypted and stored securely. We do not sell or use your data to train third-party models. You can also delete your account or documents permanently at any time. We don't use your date for training purposes. Your data is yours, and you have full control over it."
+      },
+      {
+        question: "Can I cancel my subscription? Will I be charged automatically?",
+        answer: "No contracts, no hidden fees. You can cancel your subscription anytime from your dashboard. We believe in earning your trust—not locking you in."
+      },
+      {
+        question: "Is Learningly free to use? What are my options?",
+        answer: "Yes! We offer a FREEMIUM plan with limited usage—perfect if you want to test it. Need more power? Upgrade to Pro ($10/month) for unlimited access. Plus, we offer scholarships and free Pro+ plans to students in need."
+      }
 ];
 
 export const FAQSection: React.FC = () => {
   return (
-    <section id="faq" className="py-24 bg-gradient-to-b from-background via-slate-800/20 to-background">
+    <section id="faq" className="py-24 bg-background">
       <div className="container mx-auto px-6">
-        <div className="text-center max-w-4xl mx-auto mb-16">
-          <motion.div
+        <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8 }}
+            className="text-center max-w-4xl mx-auto mb-16"
           >
-            <span className="inline-block px-4 py-2 bg-gradient-to-r from-electric-blue to-purple text-white text-sm font-bold rounded-full mb-6">
-              ❓ Got Questions?
+            <span className="inline-block px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-full mb-6">
+              Got Questions?
             </span>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6">
-              <ShinyText
-                text="Frequently Asked Questions"
-                disabled={false}
-                speed={3}
-                className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue via-purple to-lime-green font-extrabold"
-              />
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Frequently Asked Questions
             </h2>
             <p className="text-xl text-gray-400 leading-relaxed">
-              Everything you need to know about Learningly AI. Can't find what you're looking for? Just reach out to our support team! 🎓✨
+              Everything you need to know about Learningly AI. Can't find what you're looking for? Just reach out to our support team!
             </p>
-          </motion.div>
-        </div>
-
-        <div className="max-w-3xl mx-auto">
+        </motion.div>
+          
+        <div className="max-w-3xl mx-auto w-full">
           <Accordion type="single" collapsible className="space-y-4">
             {faqs.map((faq, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
                 <AccordionItem
                   value={`item-${index}`}
-                  className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 border border-white/10 rounded-xl px-6 py-4"
+                  className="bg-gray-900/50 border border-white/10 rounded-xl overflow-hidden group"
                 >
-                  <AccordionTrigger className="text-left text-lg font-semibold text-white hover:text-electric-blue transition-colors">
-                    {faq.question}
+                  <AccordionTrigger className="text-left text-lg font-semibold text-white hover:no-underline px-6 py-4 transition-colors data-[state=open]:bg-white/5 [&_svg.lucide-chevron-down]:hidden">
+                    <span className="flex-1 pr-4">{faq.question}</span>
+                    <Plus className="h-5 w-5 text-gray-400 group-data-[state=open]:hidden transition-transform duration-300" />
+                    <Minus className="h-5 w-5 text-blue-400 hidden group-data-[state=open]:block transition-transform duration-300" />
                   </AccordionTrigger>
-                  <AccordionContent className="text-gray-300 leading-relaxed pt-2">
+                  <AccordionContent className="text-gray-300 leading-relaxed px-6 pb-4 pt-0">
                     {faq.answer}
                   </AccordionContent>
                 </AccordionItem>
