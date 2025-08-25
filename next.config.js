@@ -32,6 +32,24 @@ const nextConfig = {
           },
         ],
       },
+      {
+        // Ensure PDFs are served with correct MIME type and can be embedded
+        source: '/uploads/:path*.pdf',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/pdf',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN', // Allow embedding in same origin
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000',
+          },
+        ],
+      },
     ]
   },
 }

@@ -50,19 +50,19 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     { icon: Settings, label: "Settings", href: "/settings" },
   ]
 
-  // Determine content padding based on screen size
+  // Determine content padding based on screen size with adjustments for 80% zoom
   const getContentPadding = () => {
     switch(deviceSize) {
       case 'mobile':
-        return 'p-3';
+        return 'p-2';
       case 'tablet':
-        return 'p-4';
+        return 'p-3';
       case 'laptop':
-        return 'p-5';
-      case 'desktop':
-        return 'p-6';
-      default:
         return 'p-4';
+      case 'desktop':
+        return 'p-5';
+      default:
+        return 'p-3';
     }
   }
 
@@ -79,7 +79,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       
       <main 
         className={`
-          ${sidebarCollapsed ? 'sm:ml-[60px]' : 'sm:ml-[250px]'} 
+          ${sidebarCollapsed ? 'sm:ml-[70px]' : 'sm:ml-[270px]'} 
           transition-all duration-300
           ${getContentPadding()}
         `}

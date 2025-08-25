@@ -75,7 +75,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+        <meta name="viewport" content="width=device-width, initial-scale=0.85, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body

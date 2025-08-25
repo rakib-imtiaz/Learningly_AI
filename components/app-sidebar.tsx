@@ -35,7 +35,7 @@ export default function AppSidebar({
         fixed h-screen
         ${isMobile ? 'flex' : 'hidden sm:flex'}
         flex-col bg-[#1C1C1C] text-white z-40 transition-all duration-300
-        ${sidebarCollapsed ? 'w-[60px]' : 'w-[250px]'}
+        ${sidebarCollapsed ? 'w-[70px]' : 'w-[270px]'}
         ${isMobile ? 'w-full' : ''}
       `}
     >

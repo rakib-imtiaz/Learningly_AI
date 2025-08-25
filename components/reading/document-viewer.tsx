@@ -2,23 +2,31 @@
 
 import * as React from "react"
 import { 
-  ChevronLeft, 
-  ChevronRight, 
-  ZoomIn, 
-  ZoomOut, 
   Download, 
   Upload, 
   MoreVertical,
   Search,
   MessageSquare,
   Archive,
-  AlertCircle
+  AlertCircle,
+  BrainCircuit,
+  X,
+  ChevronDown,
+  ChevronUp,
+  FileText,
+  Sparkles,
+  BookOpen,
+  Plus,
+  Menu,
+  Focus,
+  Settings
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card } from "@/components/ui/card"
 import { toast } from "@/hooks/use-toast"
 import { PDFDocument, PDFPage } from "./pdf-viewer-wrapper"
+import { RightDrawer } from "./right-drawer"
+import { useDocument } from "./document-context"
 
 interface DocumentViewerProps {
   documentUrl?: string
@@ -26,17 +34,116 @@ interface DocumentViewerProps {
 }
 
 export function DocumentViewer({ documentUrl = "/sample-document.pdf", documentTitle = "Document" }: DocumentViewerProps) {
-  const [currentPage, setCurrentPage] = React.useState(1)
-  const [totalPages, setTotalPages] = React.useState(1)
-  const [zoomLevel, setZoomLevel] = React.useState(100)
-  const [activeTab, setActiveTab] = React.useState("chat")
+  const { document, setDocument } = useDocument()
   const [pdfError, setPdfError] = React.useState(false)
   const [pdfLoading, setPdfLoading] = React.useState(true)
+  const [viewMode, setViewMode] = React.useState<"document">("document")
+  const [isFocusMode, setIsFocusMode] = React.useState(false)
+
+  const [zoomLevel, setZoomLevel] = React.useState(100)
+
+  // Set document title in context when props are provided
+  const hasProcessedRef = React.useRef(false)
+  
+  React.useEffect(() => {
+    // Reset the processed flag when documentUrl changes
+    hasProcessedRef.current = false
+    
+    if (!document && documentUrl && documentTitle && !hasProcessedRef.current) {
+      hasProcessedRef.current = true
+      
+      // Create a basic document structure for the UI
+      const basicDocument = {
+        id: 'doc-' + Date.now(),
+        title: documentTitle,
+        text: '', // Will be populated by PDF processing
+        metadata: {
+          originalFileName: documentTitle,
+          fileSize: 0,
+          fileType: 'pdf',
+          mimeType: 'application/pdf',
+          pages: 0,
+          textLength: 0,
+          uploadedAt: new Date().toISOString(),
+        }
+      }
+      setDocument(basicDocument)
+      
+      // Process the PDF to extract text
+      processPDFText(documentUrl, documentTitle)
+    }
+  }, [documentUrl, documentTitle]) // Removed processPDFText to avoid circular dependency
+
+  // Cleanup effect to reset processed flag on unmount
+  React.useEffect(() => {
+    return () => {
+      hasProcessedRef.current = false
+    }
+  }, [])
+
+  // Function to process PDF and extract text
+  const processPDFText = React.useCallback(async (url: string, title: string) => {
+    try {
+      console.log('🔄 Processing PDF text extraction for:', url)
+      
+      // Create a FormData with the PDF URL
+      const formData = new FormData()
+      formData.append('fileUrl', url)
+      formData.append('title', title)
+      
+      const response = await fetch('/api/reading/process-pdf', {
+        method: 'POST',
+        body: formData,
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        console.log('✅ PDF text extracted:', data.textLength, 'characters')
+        
+        // Update the document with extracted text
+        if (document) {
+          const updatedDocument = {
+            ...document,
+            text: data.text,
+            metadata: {
+              ...document.metadata,
+              pages: data.metadata.pages,
+              textLength: data.metadata.textLength,
+              processingNotes: data.metadata.processingNotes
+            }
+          }
+          setDocument(updatedDocument)
+        } else {
+          // If document is null, create a new one
+          const newDocument = {
+            id: 'doc-' + Date.now(),
+            title: title,
+            text: data.text,
+            metadata: {
+              originalFileName: title,
+              fileSize: 0,
+              fileType: 'pdf',
+              mimeType: 'application/pdf',
+              pages: data.metadata.pages,
+              textLength: data.metadata.textLength,
+              uploadedAt: new Date().toISOString(),
+              processingNotes: data.metadata.processingNotes
+            }
+          }
+          setDocument(newDocument)
+        }
+      } else {
+        console.error('❌ Failed to process PDF:', response.statusText)
+      }
+    } catch (error) {
+      console.error('❌ Error processing PDF:', error)
+    }
+  }, [])
 
   const handleDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
-    setTotalPages(numPages)
     setPdfLoading(false)
     setPdfError(false)
+    console.log(`✅ PDF loaded successfully using native browser viewer`)
   }
 
   const handleDocumentLoadError = (error: Error) => {
@@ -50,289 +157,164 @@ export function DocumentViewer({ documentUrl = "/sample-document.pdf", documentT
     })
   }
 
-  const goToPreviousPage = () => {
-    setCurrentPage(prev => Math.max(prev - 1, 1))
-  }
 
-  const goToNextPage = () => {
-    setCurrentPage(prev => Math.min(prev + 1, totalPages))
-  }
 
-  const adjustZoom = (amount: number) => {
-    setZoomLevel(prev => Math.max(25, Math.min(prev + amount, 200)))
-  }
+  // Keyboard shortcuts
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'f' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setIsFocusMode(prev => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
   
-  return (
-    <div className="flex h-screen bg-white text-black">
-      {/* Left Sidebar */}
-      <div className="w-60 border-r border-gray-200 flex flex-col">
-        <div className="p-4 border-b border-gray-200">
-          <h1 className="text-xl font-bold flex items-center">
-            <span className="bg-green-500 text-white p-1 rounded mr-2">L</span>
-            Learningly
-          </h1>
-          <p className="text-xs text-gray-500">AI Learning Platform</p>
-        </div>
-        
-        <div className="p-2">
-          <button className="w-full bg-blue-600 text-white rounded-lg p-2 mb-4 text-sm flex items-center">
-            <span className="mr-2">+</span> Add content
-          </button>
-        </div>
-        
-        <div className="p-2">
-          <h2 className="text-gray-700 text-sm flex items-center mb-2">
-            <Archive className="h-4 w-4 mr-1" /> History
-          </h2>
-        </div>
-        
-        <div className="p-2">
-          <h3 className="text-gray-700 text-sm mb-2">Recents</h3>
-          <ul className="space-y-1">
-            <li className="p-2 rounded hover:bg-gray-100 text-sm cursor-pointer">Electronic Structure and Bonding</li>
-            <li className="p-2 rounded hover:bg-gray-100 text-sm cursor-pointer">6.006 Introduction to Algorithms</li>
-            <li className="p-2 rounded hover:bg-gray-100 text-sm cursor-pointer">1. Introduction to the Human Mind</li>
-            <li className="p-2 rounded hover:bg-gray-100 text-sm cursor-pointer">1. Introduction to Human Psychology</li>
-            <li className="p-2 rounded hover:bg-gray-100 text-sm cursor-pointer">Lecture 1: Introduction to Biology</li>
-            <li className="p-2 rounded hover:bg-gray-100 text-sm cursor-pointer text-gray-500">Show more</li>
-          </ul>
-        </div>
-        
-        <div className="p-2 mt-4">
-          <h2 className="text-gray-700 text-sm mb-2">Spaces</h2>
-          <button className="w-full bg-gray-100 text-gray-800 rounded-lg p-2 mb-2 text-sm flex items-center">
-            <span className="mr-2">+</span> Add space
-          </button>
-          <ul className="space-y-1">
-            <li className="p-2 rounded hover:bg-gray-100 text-sm cursor-pointer">Introduction to Biology</li>
-            <li className="p-2 rounded hover:bg-gray-100 text-sm cursor-pointer">COMPSCI 224</li>
-            <li className="p-2 rounded hover:bg-gray-100 text-sm cursor-pointer">Stanford Behavioral Economics</li>
-            <li className="p-2 rounded hover:bg-gray-100 text-sm cursor-pointer">Quantum Physics</li>
-            <li className="p-2 rounded hover:bg-gray-100 text-sm cursor-pointer">MIT 6.006 Intro to Algorithms</li>
-          </ul>
-        </div>
-      </div>
-      
+     return (
+     <div className="grid min-h-screen grid-cols-[1fr_360px] xl:grid-cols-[1fr_360px]">
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Document Header */}
-        <div className="border-b border-gray-200 flex p-2">
-          <div className="flex space-x-2">
-            <Button variant="ghost" size="sm">PDF</Button>
-            <Button variant="ghost" size="sm">Chapters</Button>
-          </div>
-        </div>
-        
-        {/* Document Viewer */}
-        <div className="flex-1 flex flex-col relative">
-          {/* Document Toolbar */}
-          <div className="flex items-center justify-between px-2 py-1 bg-gray-50">
-            <div className="flex items-center space-x-1">
-              <Button variant="ghost" size="icon" className="text-gray-600">
-                <Search className="h-4 w-4" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="text-gray-600" 
-                onClick={goToPreviousPage}
-                disabled={currentPage <= 1}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <div className="flex items-center text-gray-600 text-sm">
-                <span>{currentPage}</span>
-                <span className="mx-1">/</span>
-                <span>{totalPages}</span>
-              </div>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="text-gray-600"
-                onClick={goToNextPage}
-                disabled={currentPage >= totalPages}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-            <div className="flex items-center space-x-1">
-              <Button variant="ghost" size="icon" className="text-gray-600">
-                <Search className="h-4 w-4" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="text-gray-600"
-                onClick={() => adjustZoom(-10)}
-              >
-                <ZoomOut className="h-4 w-4" />
-              </Button>
-              <span className="text-gray-600 text-sm">{zoomLevel}%</span>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="text-gray-600"
-                onClick={() => adjustZoom(10)}
-              >
-                <ZoomIn className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="text-gray-600">
-                <Download className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="text-gray-600">
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-          
-          {/* Document Content */}
-          <div className="flex-1 bg-gray-50 flex justify-center items-center overflow-auto p-4">
-            {documentUrl ? (
-              <div className="bg-white text-black w-full max-w-2xl shadow-lg border border-gray-200 overflow-hidden">
-                {pdfLoading && (
-                  <div className="h-[800px] w-full flex items-center justify-center">
+      <main className="relative flex flex-col h-screen">
+                          {/* Header */}
+         <div className="flex items-center justify-between gap-2 border-b px-4 py-3 bg-white shadow-sm">
+           <div className="flex items-center gap-3">
+             <button className="xl:hidden p-1.5 rounded-lg hover:bg-gray-100 transition-colors">
+               <Menu className="h-4 w-4 text-gray-600" />
+             </button>
+             {document?.title && (
+               <div className="text-xs text-gray-700 font-medium px-3 py-1.5 bg-blue-50 rounded-lg border border-blue-200 flex items-center gap-1.5">
+                 <span className="text-blue-600">📄</span>
+                 <span className="truncate max-w-[200px]">{document.title}</span>
+               </div>
+             )}
+           </div>
+           
+           <div className="flex items-center gap-3">
+             {/* Zoom Controls */}
+             <div className="flex items-center gap-1 bg-gray-100 rounded-lg px-2 py-1">
+               <button
+                 onClick={() => setZoomLevel(prev => Math.max(25, prev - 25))}
+                 className="p-1 rounded hover:bg-gray-200 transition-colors"
+                 title="Zoom Out"
+               >
+                 <ChevronDown className="h-3 w-3 text-gray-600" />
+               </button>
+               <span className="text-xs font-medium text-gray-700 min-w-[40px] text-center">
+                 {zoomLevel}%
+               </span>
+               <button
+                 onClick={() => setZoomLevel(prev => Math.min(200, prev + 25))}
+                 className="p-1 rounded hover:bg-gray-200 transition-colors"
+                 title="Zoom In"
+               >
+                 <ChevronUp className="h-3 w-3 text-gray-600" />
+               </button>
+             </div>
+             
+             <Button 
+               variant="ghost" 
+               size="sm"
+               onClick={() => setIsFocusMode(prev => !prev)}
+               className="text-gray-600 hover:text-gray-900 p-1.5"
+               title="Focus Mode (Ctrl+F)"
+             >
+               <Focus className="h-3 w-3" />
+             </Button>
+             
+
+           </div>
+         </div>
+
+                                  {/* PDF Area */}
+         <section className="flex-1 overflow-hidden bg-gray-50">
+           <div className="h-full w-full">
+               <div className="h-full w-full bg-white overflow-hidden">
+                 {documentUrl ? (
+                   <div className="w-full h-full overflow-hidden">
+                    {pdfLoading && (
+                      <div className="h-full w-full flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                          <p className="text-gray-500">Loading document...</p>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {pdfError && (
+                      <div className="h-full w-full flex items-center justify-center">
+                        <div className="text-center text-red-500">
+                          <AlertCircle className="h-10 w-10 mx-auto mb-4" />
+                          <p>Failed to load document. Please try again.</p>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {!pdfError && (
+                      <div className="w-full h-full overflow-auto">
+                        <div 
+                          className="w-full h-full"
+                          style={{ 
+                            transform: `scale(${zoomLevel / 100})`,
+                            transformOrigin: 'top left',
+                            minHeight: `${100 / (zoomLevel / 100)}%`,
+                            width: `${100 / (zoomLevel / 100)}%`
+                          }}
+                        >
+                          <PDFDocument
+                            file={documentUrl}
+                            onLoadSuccess={handleDocumentLoadSuccess}
+                            onLoadError={handleDocumentLoadError}
+                            loading={
+                              <div className="w-full h-full flex items-center justify-center bg-white">
+                                <div className="text-center">
+                                  <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                                  <p className="text-gray-500">Loading PDF document...</p>
+                                  <p className="text-sm text-gray-400 mt-2">This should only take a moment</p>
+                                </div>
+                              </div>
+                            }
+                            error={
+                              <div className="w-full h-full flex items-center justify-center bg-white">
+                                <div className="text-center text-red-500">
+                                  <AlertCircle className="w-12 h-12 mx-auto mb-4" />
+                                  <p className="font-medium">Failed to load PDF document</p>
+                                  <p className="text-sm text-gray-500 mt-1">Please check the file path and try again</p>
+                                </div>
+                              </div>
+                            }
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                                 ) : (
+                   <div className="h-full w-full flex items-center justify-center text-gray-500">
                     <div className="text-center">
-                      <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                      <p className="text-gray-500">Loading document...</p>
+                      <FileText className="h-16 w-16 mx-auto mb-4 text-gray-300" />
+                      <p className="text-lg font-medium">No document loaded</p>
+                      <p className="text-sm text-gray-400">Upload a document to get started</p>
                     </div>
                   </div>
                 )}
-                
-                {pdfError && (
-                  <div className="h-[800px] w-full flex items-center justify-center">
-                    <div className="text-center text-red-500">
-                      <AlertCircle className="h-10 w-10 mx-auto mb-4" />
-                      <p>Failed to load document. Please try again.</p>
-                    </div>
-                  </div>
-                )}
-                
-                {!pdfError && (
-                  <div className="h-full w-full flex justify-center">
-                    <PDFDocument
-                      file={documentUrl}
-                      onLoadSuccess={handleDocumentLoadSuccess}
-                      onLoadError={handleDocumentLoadError}
-                      loading={
-                        <div className="h-[800px] w-full flex items-center justify-center">
-                          <p className="text-center text-gray-500">Loading...</p>
-                        </div>
-                      }
-                      error={
-                        <div className="h-[800px] w-full flex items-center justify-center">
-                          <p className="text-center text-red-500">Failed to load PDF.</p>
-                        </div>
-                      }
-                    >
-                      <PDFPage 
-                        pageNumber={currentPage} 
-                        scale={zoomLevel / 100}
-                        renderTextLayer={false}
-                        renderAnnotationLayer={false}
-                        loading={
-                          <div className="h-[800px] w-full flex items-center justify-center">
-                            <p className="text-center text-gray-500">Loading page {currentPage}...</p>
-                          </div>
-                        }
-                      />
-                    </PDFDocument>
-                  </div>
-                )}
               </div>
-            ) : (
-              <div className="h-[800px] w-full flex items-center justify-center text-gray-500">
-                No document loaded
-              </div>
-            )}
           </div>
-        </div>
-      </div>
-      
-      {/* Right Sidebar */}
-      <div className="w-72 border-l border-gray-200">
-        <div className="p-2">
-          <Tabs defaultValue="chat" className="w-full">
-            <div className="flex justify-center">
-              <TabsList className="rounded-full bg-gray-100">
-                <TabsTrigger 
-                  value="chat"
-                  className={`px-4 py-1 rounded-full ${activeTab === 'chat' ? 'bg-blue-600 text-white' : ''}`}
-                  onClick={() => setActiveTab('chat')}
-                >
-                  Chat
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="flashcards" 
-                  className={`px-4 py-1 rounded-full ${activeTab === 'flashcards' ? 'bg-blue-600 text-white' : ''}`}
-                  onClick={() => setActiveTab('flashcards')}
-                >
-                  Flashcards
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="summary" 
-                  className={`px-4 py-1 rounded-full ${activeTab === 'summary' ? 'bg-blue-600 text-white' : ''}`}
-                  onClick={() => setActiveTab('summary')}
-                >
-                  Summary
-                </TabsTrigger>
-              </TabsList>
-            </div>
-            
-            <TabsContent value="chat" className="mt-4">
-              <div className="p-4">
-                <p className="text-sm text-gray-600">
-                  Welcome to the chat! Ask me anything. I may not always be right, but your
-                  feedback will help me improve!
-                </p>
-                
-                <div className="mt-8">
-                  <Card className="bg-gray-100 border border-gray-200 p-3 mb-4">
-                    <div className="flex">
-                      <div className="flex-shrink-0 mr-2">
-                        <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center text-white">
-                          Q
-                        </div>
-                      </div>
-                      <div>
-                        <p className="text-sm">
-                          Explain the Aufbau principle and how it is used to determine the electron configuration of atoms.
-                        </p>
-                      </div>
-                    </div>
-                  </Card>
-                  
-                  <Card className="bg-gray-100 border border-gray-200 p-3 mb-4">
-                    <div className="flex">
-                      <div className="flex-shrink-0 mr-2">
-                        <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center text-white">
-                          Q
-                        </div>
-                      </div>
-                      <div>
-                        <p className="text-sm">
-                          What are the differences between cations and anions in terms of their electronic structures?
-                        </p>
-                      </div>
-                    </div>
-                  </Card>
-                </div>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="flashcards" className="mt-4">
-              <div className="p-4">
-                <p className="text-sm text-gray-600">Flashcards will appear here based on document content.</p>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="summary" className="mt-4">
-              <div className="p-4">
-                <p className="text-sm text-gray-600">Document summary will appear here.</p>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
-      </div>
+        </section>
+
+        
+      </main>
+
+             {/* Right Drawer - Desktop */}
+       <aside className="hidden xl:flex flex-col border-l bg-white w-[360px]">
+         <RightDrawer 
+           isOpen={true}
+           onClose={() => {}}
+           document={document}
+           className="h-full"
+         />
+       </aside>
+
+             
     </div>
   )
 }

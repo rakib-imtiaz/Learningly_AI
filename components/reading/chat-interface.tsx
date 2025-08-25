@@ -1,0 +1,247 @@
+"use client"
+
+import React, { useState, useRef, useEffect } from 'react';
+import { Send, Loader2, User, Bot, FileText, Upload, Sparkles, BookOpen } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
+import { useDocument } from './document-context';
+import { FadeContent } from '@/components/react-bits/fade-content';
+import { ClickSpark } from '@/components/react-bits/click-spark';
+
+interface ChipProps {
+  text: string;
+  onClick: () => void;
+  icon?: React.ReactNode;
+}
+
+function Chip({ text, onClick, icon }: ChipProps) {
+  return (
+    <ClickSpark>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={onClick}
+        className="rounded-full text-sm px-4 py-2.5 hover:bg-blue-50 hover:text-blue-800 border-blue-200 text-blue-700 whitespace-nowrap flex items-center gap-2 transition-all duration-200 [&:hover]:text-blue-800 hover:shadow-md hover:scale-105 font-medium"
+      >
+        {icon}
+        {text}
+      </Button>
+    </ClickSpark>
+  );
+}
+
+export function ChatInterface() {
+  const { messages, sendMessage, isLoading, document } = useDocument();
+  const [inputValue, setInputValue] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Function to format message content with LaTeX and better formatting
+  const formatMessageContent = (content: string): string => {
+    return content
+      // Convert LaTeX math expressions
+      .replace(/\$\$(.*?)\$\$/g, '<span class="math-display">$$$1$$</span>')
+      .replace(/\$(.*?)\$/g, '<span class="math-inline">$$$1$$</span>')
+      // Convert markdown-style formatting
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      // Convert code blocks
+      .replace(/```([\s\S]*?)```/g, '<pre class="bg-gray-100 p-2 rounded text-xs my-2 overflow-x-auto"><code>$1</code></pre>')
+      .replace(/`(.*?)`/g, '<code class="bg-gray-100 px-1 rounded text-xs">$1</code>')
+      // Convert line breaks
+      .replace(/\n/g, '<br>')
+      // Convert bullet points
+      .replace(/^\s*[-*+]\s+(.*)/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>)/, '<ul class="list-disc list-inside space-y-1 my-2">$1</ul>')
+      // Convert numbered lists
+      .replace(/^\s*\d+\.\s+(.*)/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>)/, '<ol class="list-decimal list-inside space-y-1 my-2">$1</ol>')
+      // Convert headers
+      .replace(/^### (.*$)/gm, '<h3 class="text-sm font-semibold mt-3 mb-2">$1</h3>')
+      .replace(/^## (.*$)/gm, '<h2 class="text-sm font-semibold mt-3 mb-2">$1</h2>')
+      .replace(/^# (.*$)/gm, '<h1 class="text-sm font-semibold mt-3 mb-2">$1</h1>')
+      // Convert links
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">$1</a>')
+      // Convert blockquotes
+      .replace(/^>\s+(.*$)/gm, '<blockquote class="border-l-4 border-gray-300 pl-3 my-2 italic text-gray-600">$1</blockquote>');
+  };
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inputValue.trim() || isLoading) return;
+
+    const message = inputValue.trim();
+    setInputValue('');
+    await sendMessage(message);
+  };
+
+  const handleChipClick = async (chipText: string) => {
+    await sendMessage(chipText);
+  };
+
+  const quickActions = [
+    {
+      text: "Summarize this document",
+      icon: <Sparkles className="h-3 w-3" />,
+      action: "Summarize this document"
+    },
+    {
+      text: "What are the key points?",
+      icon: <BookOpen className="h-3 w-3" />,
+      action: "What are the key points?"
+    },
+    {
+      text: "Explain the main concepts",
+      icon: <FileText className="h-3 w-3" />,
+      action: "Explain the main concepts"
+    },
+    {
+      text: "Create flashcards",
+      icon: <Sparkles className="h-3 w-3" />,
+      action: "Create flashcards from this document"
+    }
+  ];
+
+  return (
+    <div className="flex flex-col h-full bg-white">
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto p-3 space-y-3">
+        {messages.length === 0 && !isLoading && (
+          <FadeContent>
+            <div className="text-center py-8 px-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <Bot className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="font-bold text-gray-900 mb-2 text-lg">
+                {document ? "Document loaded successfully! 🎉" : "Upload a document to start"}
+              </h3>
+              <p className="text-gray-600 text-sm mb-6 px-4 leading-relaxed">
+                {document ? 
+                  `I'm ready to help you with "${document.title}". Ask me anything or choose from the options below.` :
+                  "Upload a document to start our conversation."
+                }
+              </p>
+              
+              {document ? (
+                <div className="space-y-2">
+                  <div className="flex flex-wrap justify-center gap-2 mb-4">
+                    {quickActions.map((action, index) => (
+                      <Chip 
+                        key={index}
+                        text={action.text} 
+                        onClick={() => handleChipClick(action.action)}
+                        icon={action.icon}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-sm text-gray-500 font-medium">
+                    Or type your own question below
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <Upload className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <p className="text-xs text-gray-600">
+                    No document loaded. Please upload a document to start chatting.
+                  </p>
+                </div>
+              )}
+            </div>
+          </FadeContent>
+        )}
+
+        {messages.map((message, index) => (
+          <div
+            key={index}
+            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} mb-6`}
+          >
+            <div
+              className={`max-w-[85%] rounded-2xl px-4 py-3 shadow-sm ${
+                message.role === 'user'
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white'
+                  : 'bg-white border border-gray-200 text-gray-900'
+              }`}
+            >
+              <div className="flex items-start space-x-3">
+                {message.role === 'assistant' && (
+                  <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                    <Bot className="h-3 w-3 text-white" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  {message.role === 'user' ? (
+                    <p className="text-sm font-medium leading-relaxed">{message.content}</p>
+                  ) : (
+                    <div 
+                      className="text-sm leading-relaxed prose prose-sm max-w-none"
+                      dangerouslySetInnerHTML={{ 
+                        __html: formatMessageContent(message.content) 
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {isLoading && (
+          <div className="flex justify-start mb-6">
+            <div className="max-w-[85%] rounded-2xl px-4 py-3 bg-white border border-gray-200 shadow-sm">
+              <div className="flex items-center space-x-3">
+                <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-sm">
+                  <Bot className="h-3 w-3 text-white" />
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
+                  <span className="text-sm text-gray-600 font-medium">Thinking...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input */}
+      <div className="border-t border-gray-200 p-4 bg-white">
+        <form onSubmit={handleSubmit} className="flex space-x-3">
+          <Input
+            ref={inputRef}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder={document ? `Ask me anything about "${document.title}"...` : "Upload a document to start chatting"}
+            disabled={!document || isLoading}
+            className="flex-1 text-sm rounded-xl border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+          />
+          <Button
+            type="submit"
+            disabled={!inputValue.trim() || isLoading || !document}
+            size="sm"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
+          >
+            <Send className="h-4 w-4" />
+          </Button>
+        </form>
+        
+        {!document && (
+          <p className="text-sm text-gray-500 mt-2 text-center font-medium">
+            Open a document to ask questions
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}

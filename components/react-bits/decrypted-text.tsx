@@ -216,8 +216,11 @@ export default function DecryptedText({
       }
       : {}
 
+  // Filter out overRide prop to prevent React warning
+  const { overRide, ...filteredProps } = props;
+  
   return (
-    <motion.span className={parentClassName} ref={containerRef} style={styles.wrapper} {...hoverProps} {...props}>
+    <motion.span className={parentClassName} ref={containerRef} style={styles.wrapper} {...hoverProps} {...filteredProps}>
       <span style={styles.srOnly}>{displayText}</span>
 
       <span aria-hidden="true">

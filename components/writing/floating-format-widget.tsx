@@ -83,8 +83,8 @@ const FloatingFormatWidget: React.FC<FloatingFormatWidgetProps> = ({
       }}
     >
       <button
-        className="p-2 hover:bg-purple-50 rounded-md text-purple-600 transition-colors"
         onClick={onParaphrase}
+        className="p-2 hover:bg-gray-200 rounded-md text-gray-700 transition-colors"
         title="Paraphrase"
       >
         <Wand2 className="h-4 w-4" />
@@ -112,16 +112,16 @@ const FloatingFormatWidget: React.FC<FloatingFormatWidgetProps> = ({
       </DropdownMenu>
       
       <button
-        className="p-2 hover:bg-orange-50 rounded-md text-orange-600 transition-colors"
         onClick={onShorten}
+        className="p-2 hover:bg-orange-50 rounded-md text-orange-600 transition-colors"
         title="Shorten Text"
       >
         <ShrinkIcon className="h-4 w-4" />
       </button>
       
       <button
-        className="p-2 hover:bg-green-50 rounded-md text-green-600 transition-colors"
         onClick={onExpand}
+        className="p-2 hover:bg-green-50 rounded-md text-green-600 transition-colors"
         title="Expand Text"
       >
         <ExpandIcon className="h-4 w-4" />
