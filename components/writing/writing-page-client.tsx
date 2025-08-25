@@ -612,34 +612,53 @@ const WritingPageClient = () => {
   }, []);
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="p-6 pb-2">
-        <div className="flex justify-between items-center mb-2">
-          <h1 className="text-3xl font-bold">Writing Assistant</h1>
-          <DraftsManager 
-            userId={getMockUserId()} 
-            onLoadDraft={handleLoadDraft} 
-          />
-        </div>
-        <p className="text-gray-500 mt-1 mb-4">
-          Write, edit, and improve your text with AI assistance. Powered by Gemini 2.5 Flash.
-        </p>
-        <div className="flex items-center mb-4">
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mr-2">
-            <span className="h-2 w-2 rounded-full bg-blue-500 mr-1"></span>
-            Gemini 2.5 Flash
-          </span>
-          <span className="text-xs text-gray-500">
-            Enhanced paraphrasing, grammar checking, and text improvement
-          </span>
+    <div className="flex flex-col h-full bg-gradient-to-br from-gray-50 to-white">
+      {/* Header Section */}
+      <div className="bg-white border-b border-gray-200 shadow-sm">
+        <div className="p-6 pb-4">
+          <div className="flex justify-between items-start mb-3">
+            <div className="flex-1">
+              <h1 className="text-4xl font-bold text-gray-900">
+                Writing Assistant
+              </h1>
+              <p className="text-gray-600 mt-2 text-lg">
+                Write, edit, and improve your text with AI assistance. Powered by Gemini 2.5 Flash.
+              </p>
+            </div>
+            <div className="ml-4">
+              <DraftsManager 
+                userId={getMockUserId()} 
+                onLoadDraft={handleLoadDraft} 
+              />
+            </div>
+          </div>
+          
+          {/* AI Status Bar */}
+          <div className="flex items-center justify-between bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg p-3 border border-gray-200">
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2">
+                <div className="h-3 w-3 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-sm font-medium text-gray-900">AI Ready</span>
+              </div>
+              <span className="text-gray-500 font-medium">•</span>
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                <span className="h-2 w-2 rounded-full bg-gray-600 mr-2"></span>
+                Gemini 2.5 Flash
+              </span>
+            </div>
+            <span className="text-sm text-gray-700">
+              Enhanced paraphrasing, grammar checking, and text improvement
+            </span>
+          </div>
         </div>
       </div>
 
+      {/* Main Content Area */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left Panel - Editor */}
-        <div className={`flex-1 p-6 pt-0 overflow-auto transition-all ${collapseSuggestions ? 'w-full' : 'md:w-3/5'}`}>
-          <Card className="h-full shadow-sm">
-            <CardHeader className="p-0">
+        <div className={`flex-1 p-6 pt-4 overflow-auto transition-all duration-300 ease-in-out ${collapseSuggestions ? 'w-full' : 'md:w-3/5'}`}>
+          <Card className="h-full shadow-lg border-0 bg-white rounded-xl overflow-hidden">
+            <CardHeader className="p-0 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100">
               <WritingToolbar
                 onParaphrase={handleParaphrase}
                 onCheckGrammar={handleGrammarCheck}
@@ -652,39 +671,40 @@ const WritingPageClient = () => {
                 hasContent={editorContent.trim().length > 0}
                 lastProcessedFeature={lastProcessedFeature}
               />
-          </CardHeader>
-            <CardContent className="p-0 flex flex-col">
-              <div className="h-full flex-grow">
+            </CardHeader>
+            <CardContent className="p-0 flex flex-col h-full">
+              <div className="flex-grow relative">
                 <RichTextEditor
                   key={`editor-${editorKey}`}
                   initialContent={editorContent}
                   onChange={handleEditorChange}
-                  height="calc(100vh - 240px)"
+                  height="calc(100vh - 280px)"
                   onSelectedTextChange={setSelectedText}
                   setEditorRef={setEditorRef}
                 />
               </div>
-              <div className="py-2 px-4 border-t">
+              <div className="py-3 px-4 border-t border-gray-100 bg-gray-50">
                 <WordCounter text={editorContent} />
               </div>
             </CardContent>
-        </Card>
+          </Card>
         </div>
 
         {/* Collapse/Expand Button */}
         <div className="flex items-center">
           <Button
             variant="ghost"
-            className="h-12 w-6 p-0"
+            size="sm"
+            className="h-16 w-8 p-0 bg-white border border-gray-200 hover:bg-gray-50 shadow-sm"
             onClick={() => setCollapseSuggestions(!collapseSuggestions)}
           >
-            {collapseSuggestions ? <ChevronLeft /> : <ChevronRight />}
+            {collapseSuggestions ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
           </Button>
         </div>
 
         {/* Right Panel - Suggestions */}
         {!collapseSuggestions && (
-          <div className="md:w-2/5 p-6 pt-0 overflow-auto">
+          <div className="md:w-2/5 p-6 pt-4 overflow-auto">
             <AISuggestionsPanel
               selectedText={selectedText}
               onAccept={handleAcceptSuggestion}
@@ -697,8 +717,8 @@ const WritingPageClient = () => {
               activeTab={activeTab}
               onTabChange={setActiveTab}
             />
-              </div>
-            )}
+          </div>
+        )}
       </div>
       
       {/* Length Adjustment Dialog */}
