@@ -5,6 +5,8 @@ export { AuthProvider, useAuthContext } from './auth-provider'
 export { SignInForm } from './sign-in-form'
 export { SignUpForm } from './sign-up-form'
 export { ForgotPasswordForm } from './forgot-password-form'
+export { SignInCard } from './sign-in-card'
+export { SignUpCard } from './sign-up-card'
 
 // User Interface Components
 export { UserMenu } from './user-menu'
