@@ -5,17 +5,8 @@ import {
   Upload,
   FileText,
   BookOpen,
-  Link,
-  Mic,
   Search,
   ArrowRight,
-  ClipboardList,
-  Sparkles,
-  ArrowUp,
-  MessageSquare,
-  FilePlus2,
-  LayoutGrid,
-  List,
   History,
   FolderPlus,
   BookMarked,
@@ -23,32 +14,19 @@ import {
   Zap,
   Target,
   Globe,
-  Video,
   Headphones,
   Clock,
   TrendingUp,
-  Users,
   Award,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { useRouter } from "next/navigation"
 
 import { DocumentProvider } from "@/components/reading/document-context"
-
-interface ReadingResult {
-  summary: string;
-  notes: string[];
-  quiz: {
-    question: string;
-    options: string[];
-    answer: string;
-  }[];
-}
 
 interface ReadingItem {
   id: string;
@@ -60,9 +38,6 @@ interface ReadingItem {
 
 const ReadingPage = () => {
   const router = useRouter()
-  const [activeTab, setActiveTab] = React.useState("summary")
-  const [isProcessing, setIsProcessing] = React.useState(false)
-  const [result, setResult] = React.useState<ReadingResult | null>(null)
   const [showHistory, setShowHistory] = React.useState(false)
   
   // Sample reading history data
@@ -142,34 +117,6 @@ const ReadingPage = () => {
     { label: "Streak", value: "7 days", icon: TrendingUp, change: "New!" }
   ]
 
-  const handleProcess = () => {
-    setIsProcessing(true)
-    // Simulate API call
-    setTimeout(() => {
-      setResult({
-        summary: "This is a smart summary of your document. It highlights the key points and main arguments, providing a concise overview of the content.",
-        notes: [
-          "Key formula: E=mc²",
-          "Important date: 1492",
-          "Main definition: Photosynthesis is the process used by plants to convert light energy into chemical energy.",
-        ],
-        quiz: [
-          {
-            question: "What is the key formula mentioned?",
-            options: ["E=mc²", "A²+B²=C²", "F=ma"],
-            answer: "E=mc²",
-          },
-          {
-            question: "What is the main definition provided?",
-            options: ["Photosynthesis", "Metabolism", "Respiration"],
-            answer: "Photosynthesis",
-          },
-        ],
-      })
-      setIsProcessing(false)
-    }, 2000)
-  }
-
   return (
     <DocumentProvider>
       <div className="min-h-screen bg-gray-50">
@@ -217,7 +164,7 @@ const ReadingPage = () => {
               {/* Study Progress */}
               <div className="mb-8 p-5 bg-gray-50 rounded-xl">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">Today's Progress</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">Today&apos;s Progress</h3>
                   <TrendingUp className="h-5 w-5 text-blue-600" />
                 </div>
                 <div className="space-y-4">
@@ -436,7 +383,7 @@ const ReadingPage = () => {
                 <div className="bg-white rounded-xl p-3 border border-gray-200 shadow-sm">
                   <div className="flex">
                     <Input 
-                      placeholder="Ask me anything or describe what you'd like to learn..." 
+                      placeholder="Ask me anything or describe what you&apos;d like to learn..." 
                       className="flex-1 text-lg border-0 focus:ring-0 focus-visible:ring-0 placeholder:text-gray-400"
                     />
                     <Button className="ml-3 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">

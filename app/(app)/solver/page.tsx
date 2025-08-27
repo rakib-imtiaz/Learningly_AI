@@ -3,9 +3,7 @@
 import * as React from "react"
 import {
   Lightbulb,
-  ChevronRight,
   BrainCircuit,
-  Plus,
   Type,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -13,7 +11,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Header } from "@/components/ui/header"
 import { motion } from "framer-motion"
-import { Typewriter } from "@/components/react-bits/typewriter"
 
 interface SolutionStep {
   title: string;

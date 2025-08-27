@@ -154,11 +154,11 @@ export async function GET(request: NextRequest) {
   }
   
   // Validate and sanitize redirect path
-  const validatedNext = validateRedirectPath(params.next)
+  const validatedNext = validateRedirectPath(params.next || null)
   
   try {
     // Exchange code for session with cookie bridging
-    const supabase = createClient()
+    const supabase = await createClient()
     const { data, error } = await supabase.auth.exchangeCodeForSession(params.code)
     
     if (error) {

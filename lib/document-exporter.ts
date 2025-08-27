@@ -1,6 +1,5 @@
 import { jsPDF } from 'jspdf';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
-import { v4 as uuidv4 } from 'uuid';
 
 // Interface for document metadata
 interface DocumentMetadata {
@@ -93,7 +92,7 @@ export const exportDocument = async (
   metadata: DocumentMetadata = {}
 ): Promise<{ blob: Blob, filename: string }> => {
   let blob: Blob;
-  let fileExtension: string = format;
+  const fileExtension: string = format;
   
   switch (format) {
     case 'pdf':

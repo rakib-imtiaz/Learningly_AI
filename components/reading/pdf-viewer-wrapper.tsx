@@ -45,7 +45,7 @@ export const PDFDocument: React.FC<{
     }
     
     checkFile()
-  }, [file, retryKey]) // Removed onLoadSuccess and onLoadError from dependencies to prevent infinite loops
+  }, [file, retryKey, onLoadError]) // Added onLoadError back to dependencies
 
   const handleRetry = () => {
     setIsLoading(true)
@@ -85,7 +85,7 @@ export const PDFDocument: React.FC<{
   }
 
   if (isLoading) {
-    return loading || defaultLoading
+    return defaultLoading
   }
 
   return (

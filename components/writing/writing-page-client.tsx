@@ -1,19 +1,16 @@
 "use client"
 
 import * as React from "react"
-import { useState, useRef, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Pencil, ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import RichTextEditor from "@/components/writing/rich-text-editor"
 import WritingToolbar from "@/components/writing/writing-toolbar"
 import AISuggestionsPanel from "@/components/writing/ai-suggestions-panel"
 import DraftsManager from "@/components/writing/drafts-manager"
 import WordCounter from "@/components/writing/word-counter"
 import LengthAdjustDialog from "@/components/writing/length-adjust-dialog"
-import { convertToRaw, ContentState, EditorState, SelectionState } from "draft-js"
-import draftToHtml from "draftjs-to-html"
 import { getMockUserId } from "@/lib/mock-user"
 import { openInGoogleDocs, downloadFile } from "@/components/writing/google-docs-export"
 import { useToast } from "@/hooks/use-toast"
@@ -40,8 +37,9 @@ const WritingPageClient = () => {
   const [lastProcessedFeature, setLastProcessedFeature] = useState<string>("")
   const [lengthAdjustDialogOpen, setLengthAdjustDialogOpen] = useState<boolean>(false)
   const [lengthAdjustAction, setLengthAdjustAction] = useState<'shorten' | 'expand'>('shorten')
-  const [editorRef, setEditorRef] = useState<any>(null)
+
   const [editorKey, setEditorKey] = useState<number>(0)
+  const [editorRef, setEditorRef] = useState<any>(null)
   const [activeTab, setActiveTab] = useState<string>("paraphrase")
   const [lastSelectedText, setLastSelectedText] = useState<string>("") // Backup for selected text
   

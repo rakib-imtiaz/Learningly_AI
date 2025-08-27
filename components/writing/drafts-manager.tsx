@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -95,7 +95,7 @@ const DraftsManager: React.FC<DraftsManagerProps> = ({ userId, onLoadDraft }) =>
           <div className="text-center py-8 text-red-500">{error}</div>
         ) : drafts.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
-            You don't have any saved drafts yet.
+            You don&apos;t have any saved drafts yet.
           </div>
         ) : (
           <ScrollArea className="h-[400px] pr-4">

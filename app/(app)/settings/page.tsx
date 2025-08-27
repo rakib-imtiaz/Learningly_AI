@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Settings, Bell, Palette, Database } from "lucide-react"
+import { Bell, Palette, Database } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"

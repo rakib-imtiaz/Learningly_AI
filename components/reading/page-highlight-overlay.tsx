@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Highlight } from './highlight-context';
 import { convertPercentageToPixels } from '@/lib/highlight-utils';
 import { Pulse } from '@/components/react-bits/pulse';
@@ -23,7 +23,6 @@ export function PageHighlightOverlay({
   onQuestionRequest,
 }: PageHighlightOverlayProps) {
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
-  const [touchStartTime, setTouchStartTime] = useState<number | null>(null);
   const longPressDelay = 500; // 500ms for long press
 
   const pageHighlights = highlights.filter(h => h.pageNumber === pageNumber);
@@ -40,7 +39,6 @@ export function PageHighlightOverlay({
   };
 
   const handleTouchStart = (e: React.TouchEvent, highlight: Highlight) => {
-    setTouchStartTime(Date.now());
     const timer = setTimeout(() => {
       if (onQuestionRequest) {
         onQuestionRequest(highlight);
@@ -54,7 +52,6 @@ export function PageHighlightOverlay({
       clearTimeout(longPressTimer);
       setLongPressTimer(null);
     }
-    setTouchStartTime(null);
   };
 
   const handleTouchMove = () => {
@@ -62,7 +59,6 @@ export function PageHighlightOverlay({
       clearTimeout(longPressTimer);
       setLongPressTimer(null);
     }
-    setTouchStartTime(null);
   };
 
   return (

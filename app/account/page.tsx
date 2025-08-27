@@ -6,7 +6,7 @@ import { Toaster } from 'sonner'
 import { FadeContent } from '@/components/react-bits/fade-content'
 import { SlideIn } from '@/components/react-bits/slide-in'
 import ShinyText from '@/components/react-bits/shiny-text'
-import { BookOpen, Brain, Sparkles, Shield, Users, Zap, ArrowRight } from 'lucide-react'
+import { BookOpen, Brain, Sparkles, Shield, Users, Zap } from 'lucide-react'
 import { SignInCard, SignUpCard } from '@/components/auth'
 
 export default function AccountPage() {

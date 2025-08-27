@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { SlideIn } from '@/components/react-bits/slide-in';
 import { useToast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
 
 interface HighlightQuestionModalProps {
   isOpen: boolean;
@@ -62,7 +61,7 @@ export function HighlightQuestionModal({
       await onSubmitQuestion(question.trim(), highlightId);
       showSuccess("Your question has been added to the chat.");
       onClose();
-    } catch (error) {
+    } catch {
       showError("Failed to submit question. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -90,11 +89,11 @@ export function HighlightQuestionModal({
             </DialogTitle>
             <div className="mt-2 p-3 bg-muted rounded-md">
               <p className="text-sm text-muted-foreground mb-1">Selected text:</p>
-              <p className="text-sm font-medium leading-relaxed">
-                "{highlightedText.length > 200 
-                  ? `${highlightedText.substring(0, 200)}...` 
-                  : highlightedText}"
-              </p>
+                             <p className="text-sm font-medium leading-relaxed">
+                 &ldquo;{highlightedText.length > 200 
+                   ? `${highlightedText.substring(0, 200)}...` 
+                   : highlightedText}&rdquo;
+               </p>
             </div>
           </DialogHeader>
 

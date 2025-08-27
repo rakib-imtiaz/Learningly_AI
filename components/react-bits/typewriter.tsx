@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 
 interface TypewriterProps {
@@ -18,7 +18,7 @@ export const Typewriter: React.FC<TypewriterProps> = ({
   loop = false,
   className = "",
 }) => {
-  const words = Array.isArray(text) ? text : [text];
+  const words = useMemo(() => Array.isArray(text) ? text : [text], [text]);
   const [index, setIndex] = useState(0);
   const [subIndex, setSubIndex] = useState(0);
   const [reverse, setReverse] = useState(false);

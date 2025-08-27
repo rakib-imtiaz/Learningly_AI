@@ -19,6 +19,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import AppSidebar from "@/components/app-sidebar"
 import { usePathname } from 'next/navigation'
 import { useDeviceSize } from "@/hooks/use-device-size"
+import { AuthProvider } from "@/components/auth/auth-provider"
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false)
@@ -67,45 +68,47 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-white text-black">
-      <div className="hidden sm:block">
-        <AppSidebar
-          sidebarCollapsed={sidebarCollapsed}
-          setSidebarCollapsed={setSidebarCollapsed}
-          navigationItems={navigationItems}
-          workspaceItems={workspaceItems}
-        />
-      </div>
-      
-      <main 
-        className={`
-          ${sidebarCollapsed ? 'sm:ml-[70px]' : 'sm:ml-[270px]'} 
-          transition-all duration-300
-          ${getContentPadding()}
-        `}
-      >
-        {children}
-      </main>
+    <AuthProvider>
+      <div className="min-h-screen bg-white text-black">
+        <div className="hidden sm:block">
+          <AppSidebar
+            sidebarCollapsed={sidebarCollapsed}
+            setSidebarCollapsed={setSidebarCollapsed}
+            navigationItems={navigationItems}
+            workspaceItems={workspaceItems}
+          />
+        </div>
+        
+        <main 
+          className={`
+            ${sidebarCollapsed ? 'sm:ml-[70px]' : 'sm:ml-[270px]'} 
+            transition-all duration-300
+            ${getContentPadding()}
+          `}
+        >
+          {children}
+        </main>
 
-      {/* Mobile Sidebar */}
-      <div className="sm:hidden">
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="fixed top-4 left-4 z-50 text-black">
-              <Menu className="h-6 w-6" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-[250px] bg-[#1C1C1C] p-0">
-            <AppSidebar
-              sidebarCollapsed={false}
-              setSidebarCollapsed={() => {}}
-              navigationItems={navigationItems}
-              workspaceItems={workspaceItems}
-              isMobile
-            />
-          </SheetContent>
-        </Sheet>
+        {/* Mobile Sidebar */}
+        <div className="sm:hidden">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="fixed top-4 left-4 z-50 text-black">
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[250px] bg-[#1C1C1C] p-0">
+              <AppSidebar
+                sidebarCollapsed={false}
+                setSidebarCollapsed={() => {}}
+                navigationItems={navigationItems}
+                workspaceItems={workspaceItems}
+                isMobile
+              />
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
-    </div>
+    </AuthProvider>
   )
 }

@@ -5,7 +5,6 @@ import {
   MessageSquare, 
   Archive, 
   Sparkles, 
-  X,
   FileText,
   BookOpen
 } from "lucide-react"
@@ -18,7 +17,7 @@ interface RightDrawerProps {
   className?: string
 }
 
-export function RightDrawer({ isOpen, onClose, document, className = "" }: RightDrawerProps) {
+export function RightDrawer({ document, className = "" }: RightDrawerProps) {
   const [activeTab, setActiveTab] = React.useState("chat")
 
   const tabs = [
@@ -137,7 +136,7 @@ export function RightDrawer({ isOpen, onClose, document, className = "" }: Right
                        ))}
                      </div>
                      <div className="text-xs text-gray-500">
-                       Click the button above to generate flashcards from "{document.title}"
+                       Click the button above to generate flashcards from &ldquo;{document.title}&rdquo;
                      </div>
                    </div>
                  ) : (
@@ -178,7 +177,7 @@ export function RightDrawer({ isOpen, onClose, document, className = "" }: Right
                        ))}
                      </div>
                      <div className="text-xs text-gray-500">
-                       Click the button above to summarize "{document.title}"
+                       Click the button above to summarize &ldquo;{document.title}&rdquo;
                      </div>
                    </div>
                  ) : (

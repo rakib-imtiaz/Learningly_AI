@@ -21,13 +21,13 @@ export default function VerifyEmailPage() {
             </div>
             <CardTitle className="text-2xl font-bold">Check your email</CardTitle>
             <CardDescription>
-              We've sent a verification link to your email address
+              We&apos;ve sent a verification link to your email address
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-gray-600 text-center">
               Click the verification link in the email to activate your account. 
-              If you don't see the email, check your spam folder.
+              If you don&apos;t see the email, check your spam folder.
             </p>
             <div className="text-center">
               <Link href="/account">

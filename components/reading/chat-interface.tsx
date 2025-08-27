@@ -1,10 +1,9 @@
 "use client"
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Loader2, User, Bot, FileText, Upload, Sparkles, BookOpen } from 'lucide-react';
+import { Send, Loader2, Bot, FileText, Upload, Sparkles, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
 import { useDocument } from './document-context';
 import { FadeContent } from '@/components/react-bits/fade-content';
 import { ClickSpark } from '@/components/react-bits/click-spark';

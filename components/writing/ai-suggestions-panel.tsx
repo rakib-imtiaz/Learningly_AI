@@ -1,12 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Sparkles, CheckCircle, X, RefreshCw, Eraser } from "lucide-react";
-import RichTextEditor from "./rich-text-editor";
-import { SlideIn } from "@/components/react-bits/slide-in";
 
 interface AISuggestionsPanelProps {
   selectedText: string;

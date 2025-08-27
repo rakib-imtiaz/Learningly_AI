@@ -242,7 +242,7 @@ const WritingToolbar: React.FC<WritingToolbarProps> = ({
 
       {/* AI Status Indicator */}
       <div className="flex items-center gap-2">
-        <AIStatusIndicator isProcessing={isProcessing} />
+        <AIStatusIndicator isProcessing={isProcessing} model="Gemini 2.5 Flash" />
         {lastProcessedFeature && (
           <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
             {lastProcessedFeature}

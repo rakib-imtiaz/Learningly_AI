@@ -160,7 +160,7 @@ const ExamPrepPage = () => {
                 <GraduationCap className="mx-auto h-12 w-12 text-muted-foreground" />
                 <div className="space-y-1">
                   <p className="text-foreground font-medium">Your generated exam will appear here</p>
-                  <p className="text-muted-foreground text-sm">Fill out the form and click "Generate Exam" to get started</p>
+                    Fill out the form and click &quot;Generate Exam&quot; to get started
                 </div>
               </div>
             </div>

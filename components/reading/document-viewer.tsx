@@ -2,29 +2,18 @@
 
 import * as React from "react"
 import { 
-  Download, 
-  Upload, 
-  MoreVertical,
-  Search,
-  MessageSquare,
-  Archive,
   AlertCircle,
-  BrainCircuit,
-  X,
   ChevronDown,
   ChevronUp,
   FileText,
   Sparkles,
   BookOpen,
-  Plus,
   Menu,
-  Focus,
-  Settings
+  Focus
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import { toast } from "@/hooks/use-toast"
-import { PDFDocument, PDFPage } from "./pdf-viewer-wrapper"
+import { PDFDocument } from "./pdf-viewer-wrapper"
 import { RightDrawer } from "./right-drawer"
 import { useDocument } from "./document-context"
 import { HighlightQuestionModal } from "./highlight-question-modal"
@@ -41,9 +30,8 @@ export function DocumentViewer({ documentUrl = "/sample-document.pdf", documentT
   const { document, setDocument } = useDocument()
   const [pdfError, setPdfError] = React.useState(false)
   const [pdfLoading, setPdfLoading] = React.useState(true)
-  const [viewMode, setViewMode] = React.useState<"document">("document")
-  const [isFocusMode, setIsFocusMode] = React.useState(false)
   const [zoomLevel, setZoomLevel] = React.useState(100)
+  const [isFocusMode, setIsFocusMode] = React.useState(false)
   const [currentPage, setCurrentPage] = React.useState(1)
   const [pageDimensions, setPageDimensions] = React.useState({ width: 0, height: 0 })
   
@@ -90,7 +78,7 @@ export function DocumentViewer({ documentUrl = "/sample-document.pdf", documentT
       // Process the PDF to extract text
       processPDFText(documentUrl, documentTitle)
     }
-  }, [documentUrl, documentTitle]) // Removed processPDFText to avoid circular dependency
+  }, [documentUrl, documentTitle, document, setDocument])
 
   // Cleanup effect to reset processed flag on unmount
   React.useEffect(() => {
@@ -156,9 +144,9 @@ export function DocumentViewer({ documentUrl = "/sample-document.pdf", documentT
     } catch (error) {
       console.error('❌ Error processing PDF:', error)
     }
-  }, [])
+  }, [document, setDocument])
 
-  const handleDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+  const handleDocumentLoadSuccess = () => {
     setPdfLoading(false)
     setPdfError(false)
     console.log(`✅ PDF loaded successfully using native browser viewer`)
