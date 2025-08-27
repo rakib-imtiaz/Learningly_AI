@@ -45,7 +45,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   ]
 
   const workspaceItems = [
-    { icon: User, label: "Account", href: "/account" },
+    { icon: User, label: "Profile", href: "/profile" },
     { icon: Calendar, label: "Calendar", href: "/calendar" },
     { icon: Settings, label: "Settings", href: "/settings" },
   ]

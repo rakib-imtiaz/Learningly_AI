@@ -105,7 +105,7 @@ const TestimonialCard = ({ name, degree, university, text, avatar }: typeof test
 
 export const TestimonialsSection: React.FC = () => {
   return (
-    <section id="testimonials" className="py-24 bg-gradient-to-b from-background via-slate-800/20 to-background">
+    <section id="testimonials" className="py-24 bg-black">
       <div className="container mx-auto px-6">
         <div className="text-center max-w-4xl mx-auto mb-16">
           <motion.div

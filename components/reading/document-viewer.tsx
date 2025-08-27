@@ -27,6 +27,10 @@ import { toast } from "@/hooks/use-toast"
 import { PDFDocument, PDFPage } from "./pdf-viewer-wrapper"
 import { RightDrawer } from "./right-drawer"
 import { useDocument } from "./document-context"
+import { HighlightQuestionModal } from "./highlight-question-modal"
+import { PageHighlightOverlay } from "./page-highlight-overlay"
+import { useHighlightQuestion } from "@/hooks/use-highlight-question"
+import { useHighlights, useHighlightActions } from "@/components/reading/highlight-context"
 
 interface DocumentViewerProps {
   documentUrl?: string
@@ -39,8 +43,22 @@ export function DocumentViewer({ documentUrl = "/sample-document.pdf", documentT
   const [pdfLoading, setPdfLoading] = React.useState(true)
   const [viewMode, setViewMode] = React.useState<"document">("document")
   const [isFocusMode, setIsFocusMode] = React.useState(false)
-
   const [zoomLevel, setZoomLevel] = React.useState(100)
+  const [currentPage, setCurrentPage] = React.useState(1)
+  const [pageDimensions, setPageDimensions] = React.useState({ width: 0, height: 0 })
+  
+  // Highlight context
+  const { highlights } = useHighlights()
+  const { removeHighlight } = useHighlightActions()
+  
+  // Highlight question functionality
+  const {
+    isModalOpen,
+    selectedHighlight,
+    openQuestionModal,
+    closeQuestionModal,
+    submitQuestion
+  } = useHighlightQuestion()
 
   // Set document title in context when props are provided
   const hasProcessedRef = React.useRef(false)
@@ -144,6 +162,10 @@ export function DocumentViewer({ documentUrl = "/sample-document.pdf", documentT
     setPdfLoading(false)
     setPdfError(false)
     console.log(`✅ PDF loaded successfully using native browser viewer`)
+    
+    // Set initial page dimensions (approximate for native viewer)
+    // These will be updated when we can measure the actual PDF content
+    setPageDimensions({ width: 612, height: 792 }) // Standard US Letter size in points
   }
 
   const handleDocumentLoadError = (error: Error) => {
@@ -171,6 +193,14 @@ export function DocumentViewer({ documentUrl = "/sample-document.pdf", documentT
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  // Handle question request from highlight overlay
+  const handleQuestionRequest = (highlight: any) => {
+    openQuestionModal(highlight);
+  };
+  
+  // Get highlights for current page
+  const currentPageHighlights = highlights.filter(h => h.pageNumber === currentPage);
   
      return (
      <div className="grid min-h-screen grid-cols-[1fr_360px] xl:grid-cols-[1fr_360px]">
@@ -253,7 +283,7 @@ export function DocumentViewer({ documentUrl = "/sample-document.pdf", documentT
                     {!pdfError && (
                       <div className="w-full h-full overflow-auto">
                         <div 
-                          className="w-full h-full"
+                          className="w-full h-full relative"
                           style={{ 
                             transform: `scale(${zoomLevel / 100})`,
                             transformOrigin: 'top left',
@@ -283,6 +313,16 @@ export function DocumentViewer({ documentUrl = "/sample-document.pdf", documentT
                                 </div>
                               </div>
                             }
+                          />
+                          
+                          {/* Page Highlight Overlay */}
+                          <PageHighlightOverlay
+                            pageNumber={currentPage}
+                            pageWidth={pageDimensions.width}
+                            pageHeight={pageDimensions.height}
+                            highlights={currentPageHighlights}
+                            onRemoveHighlight={removeHighlight}
+                            onQuestionRequest={handleQuestionRequest}
                           />
                         </div>
                       </div>
@@ -314,6 +354,14 @@ export function DocumentViewer({ documentUrl = "/sample-document.pdf", documentT
          />
        </aside>
 
+      {/* Highlight Question Modal */}
+      <HighlightQuestionModal
+        isOpen={isModalOpen}
+        onClose={closeQuestionModal}
+        highlightedText={selectedHighlight?.selectedText || ''}
+        onSubmitQuestion={submitQuestion}
+        highlightId={selectedHighlight?.id || ''}
+      />
              
     </div>
   )

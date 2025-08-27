@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Progress } from "@/components/ui/progress"
+import { Header } from "@/components/ui/header"
 import { motion } from "framer-motion"
 
 const ExamPrepPage = () => {
@@ -40,29 +41,27 @@ const ExamPrepPage = () => {
   }
 
   return (
-    <div className="p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-black mb-2">Exam Preparation</h1>
-        <p className="text-gray-500">
-          Generate custom practice exams from your study materials.
-        </p>
-      </div>
+    <div className="p-6 space-y-8">
+      <Header 
+        title="Exam Preparation" 
+        subtitle="Generate custom practice exams from your study materials."
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Create New Exam Card */}
         <div className="lg:col-span-1">
-          <Card className="shadow-lg rounded-xl border-gray-200">
+          <Card className="border-border">
             <CardHeader className="pb-4">
-              <CardTitle className="flex items-center text-lg">
+              <CardTitle className="flex items-center text-lg text-foreground">
                 <Plus className="mr-2 h-5 w-5" />
                 Create New Exam
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Topic</label>
+                <label className="text-sm font-medium text-foreground">Topic</label>
                 <Select value={selectedTopic} onValueChange={setSelectedTopic}>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full border-border">
                     <SelectValue placeholder="Select Topic" />
                   </SelectTrigger>
                   <SelectContent>
@@ -76,9 +75,9 @@ const ExamPrepPage = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Question Types</label>
+                <label className="text-sm font-medium text-foreground">Question Types</label>
                 <Select value={selectedType} onValueChange={setSelectedType}>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full border-border">
                     <SelectValue placeholder="Question Types" />
                   </SelectTrigger>
                   <SelectContent>
@@ -91,9 +90,9 @@ const ExamPrepPage = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">Number of Questions</label>
+                <label className="text-sm font-medium text-foreground">Number of Questions</label>
                 <Select value={selectedQuestions} onValueChange={setSelectedQuestions}>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full border-border">
                     <SelectValue placeholder="Number of Questions" />
                   </SelectTrigger>
                   <SelectContent>
@@ -108,11 +107,11 @@ const ExamPrepPage = () => {
               <Button 
                 onClick={handleGenerate} 
                 disabled={isGenerating || !selectedTopic || !selectedType || !selectedQuestions} 
-                className="w-full bg-green-600 hover:bg-green-700 text-white"
+                className="w-full"
               >
                 {isGenerating ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-foreground mr-2"></div>
                     Generating...
                   </>
                 ) : (
@@ -134,21 +133,21 @@ const ExamPrepPage = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3 }}
             >
-              <Card className="shadow-lg rounded-xl border-green-200 bg-green-50">
+              <Card className="border-primary/20 bg-primary/5">
                 <CardHeader className="text-center pb-4">
-                  <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                    <GraduationCap className="h-6 w-6 text-green-600" />
+                  <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                    <GraduationCap className="h-6 w-6 text-primary" />
                   </div>
-                  <CardTitle className="text-xl text-green-800">Your Practice Exam is Ready!</CardTitle>
-                  <p className="text-green-600 mt-2">
+                  <CardTitle className="text-xl text-foreground">Your Practice Exam is Ready!</CardTitle>
+                  <p className="text-muted-foreground mt-2">
                     {selectedQuestions} {selectedType === 'mcq' ? 'Multiple Choice' : selectedType === 'short_answer' ? 'Short Answer' : selectedType} questions on {selectedTopic}
                   </p>
                 </CardHeader>
                 <CardContent className="text-center">
-                  <p className="text-gray-600 mb-6">
+                  <p className="text-muted-foreground mb-6">
                     Good luck! You can review your results and get detailed explanations afterward.
                   </p>
-                  <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white px-8">
+                  <Button size="lg" className="px-8">
                     Start Exam
                     <TrendingUp className="ml-2 h-4 w-4" />
                   </Button>
@@ -156,11 +155,13 @@ const ExamPrepPage = () => {
               </Card>
             </motion.div>
           ) : (
-            <div className="h-full min-h-[400px] flex items-center justify-center border-2 border-dashed border-gray-300 rounded-xl bg-gray-50">
-              <div className="text-center">
-                <GraduationCap className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                <p className="text-gray-500 text-lg">Your generated exam will appear here</p>
-                <p className="text-gray-400 text-sm mt-2">Fill out the form and click "Generate Exam" to get started</p>
+            <div className="h-full min-h-[400px] flex items-center justify-center border-2 border-dashed border-border rounded-lg bg-muted/30">
+              <div className="text-center space-y-3">
+                <GraduationCap className="mx-auto h-12 w-12 text-muted-foreground" />
+                <div className="space-y-1">
+                  <p className="text-foreground font-medium">Your generated exam will appear here</p>
+                  <p className="text-muted-foreground text-sm">Fill out the form and click "Generate Exam" to get started</p>
+                </div>
               </div>
             </div>
           )}
@@ -168,31 +169,34 @@ const ExamPrepPage = () => {
       </div>
 
       {/* Progress Tracking Section */}
-      <div className="mt-12">
-        <h2 className="text-2xl font-bold text-black mb-6">Progress Tracking</h2>
-        <Card className="shadow-lg rounded-xl border-gray-200">
+      <div className="space-y-6">
+        <Header 
+          title="Progress Tracking" 
+          subtitle="Monitor your performance across different subjects"
+        />
+        <Card className="border-border">
           <CardHeader>
-            <CardTitle className="text-lg">Overall Score</CardTitle>
+            <CardTitle className="text-lg text-foreground">Overall Score</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-gray-700 font-medium">Biology</span>
-                <span className="font-bold text-green-600">85%</span>
+                <span className="text-foreground font-medium">Biology</span>
+                <span className="font-semibold text-primary">85%</span>
               </div>
               <Progress value={85} className="h-2" />
             </div>
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-gray-700 font-medium">History</span>
-                <span className="font-bold text-blue-600">72%</span>
+                <span className="text-foreground font-medium">History</span>
+                <span className="font-semibold text-primary">72%</span>
               </div>
               <Progress value={72} className="h-2" />
             </div>
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-gray-700 font-medium">Chemistry</span>
-                <span className="font-bold text-yellow-600">68%</span>
+                <span className="text-foreground font-medium">Chemistry</span>
+                <span className="font-semibold text-primary">68%</span>
               </div>
               <Progress value={68} className="h-2" />
             </div>

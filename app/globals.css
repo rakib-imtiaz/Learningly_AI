@@ -40,53 +40,66 @@
 
 @layer base {
   :root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 211 100% 50%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 271 76% 53%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 120 61% 50%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    /* ChatGPT-inspired light theme */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 211 100% 50%;
-    --radius: 0.8rem;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.5rem;
     
-    /* Student-focused color palette */
-    --electric-blue: 211 100% 50%;
-    --purple: 271 76% 53%;
-    --lime-green: 120 61% 50%;
+    /* ChatGPT-inspired specific colors */
+    --chatgpt-bg: 0 0% 100%;
+    --chatgpt-border: 240 5.9% 90%;
+    --chatgpt-text-primary: 240 10% 3.9%;
+    --chatgpt-text-secondary: 240 3.8% 46.1%;
+    --chatgpt-accent: 240 5.9% 10%;
+    --chatgpt-muted: 240 4.8% 95.9%;
   }
 
   .dark {
+    /* ChatGPT-inspired dark theme */
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 211 100% 50%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 271 76% 53%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
     --muted: 240 3.7% 15.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 120 61% 50%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 211 100% 50%;
+    --ring: 240 4.9% 83.9%;
+    
+    /* ChatGPT-inspired specific colors for dark mode */
+    --chatgpt-bg: 240 10% 3.9%;
+    --chatgpt-border: 240 3.7% 15.9%;
+    --chatgpt-text-primary: 0 0% 98%;
+    --chatgpt-text-secondary: 240 5% 64.9%;
+    --chatgpt-accent: 0 0% 98%;
+    --chatgpt-muted: 240 3.7% 15.9%;
   }
 }
 

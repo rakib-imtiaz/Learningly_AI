@@ -25,7 +25,7 @@ const BentoCard = ({ children, className }: { children: React.ReactNode; classNa
 
 export const CTASection: React.FC = () => {
   return (
-    <section id="contact" className="py-24 bg-background relative">
+    <section id="contact" className="py-24 bg-black relative">
       <DotPattern className="absolute inset-0 opacity-10" />
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-3 gap-8">

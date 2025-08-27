@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
+import { Header } from "@/components/ui/header"
 import {
   Select,
   SelectContent,
@@ -16,28 +17,28 @@ import {
 
 const SettingsPage = () => {
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-2">Settings</h1>
-      <p className="text-gray-500 mb-8">
-        Manage your application preferences.
-      </p>
+    <div className="p-6 space-y-8">
+      <Header 
+        title="Settings" 
+        subtitle="Manage your application preferences."
+      />
 
-      <div className="space-y-8 max-w-3xl mx-auto">
-        <Card className="shadow-lg rounded-xl">
+      <div className="space-y-6 max-w-3xl mx-auto">
+        <Card className="border-border">
           <CardHeader>
-            <CardTitle className="flex items-center">
-              <Palette className="mr-2" />
+            <CardTitle className="flex items-center text-foreground">
+              <Palette className="mr-2 h-5 w-5" />
               Appearance
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-muted-foreground">
               Customize the look and feel of the application.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
-              <Label htmlFor="theme">Theme</Label>
+              <Label htmlFor="theme" className="text-foreground">Theme</Label>
               <Select defaultValue="system">
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-[180px] border-border">
                   <SelectValue placeholder="Select theme" />
                 </SelectTrigger>
                 <SelectContent>
@@ -50,41 +51,45 @@ const SettingsPage = () => {
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg rounded-xl">
+        <Card className="border-border">
           <CardHeader>
-            <CardTitle className="flex items-center">
-              <Bell className="mr-2" />
+            <CardTitle className="flex items-center text-foreground">
+              <Bell className="mr-2 h-5 w-5" />
               Notifications
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-muted-foreground">
               Manage how you receive notifications.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <Label htmlFor="email-notifications">Email Notifications</Label>
+              <Label htmlFor="email-notifications" className="text-foreground">Email Notifications</Label>
               <Switch id="email-notifications" defaultChecked />
             </div>
             <div className="flex items-center justify-between">
-              <Label htmlFor="push-notifications">Push Notifications</Label>
+              <Label htmlFor="push-notifications" className="text-foreground">Push Notifications</Label>
               <Switch id="push-notifications" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg rounded-xl">
+        <Card className="border-border">
           <CardHeader>
-            <CardTitle className="flex items-center">
-              <Database className="mr-2" />
+            <CardTitle className="flex items-center text-foreground">
+              <Database className="mr-2 h-5 w-5" />
               Data Management
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-muted-foreground">
               Manage your personal data and history.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Button variant="outline" className="w-full">Export My Data</Button>
-            <Button variant="destructive" className="w-full">Delete My Account</Button>
+            <Button variant="outline" className="w-full border-border">
+              Export My Data
+            </Button>
+            <Button variant="destructive" className="w-full">
+              Delete My Account
+            </Button>
           </CardContent>
         </Card>
       </div>

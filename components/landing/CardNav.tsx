@@ -162,9 +162,16 @@ const CardNav: React.FC<CardNavProps> = ({
   const handleLinkClick = (href?: string) => {
     toggleMenu();
     if (href) {
-      const targetElement = document.querySelector(href);
-      if (targetElement) {
-        targetElement.scrollIntoView({ behavior: 'smooth' });
+      // Check if it's a hash link (scroll to section) or a URL path (navigation)
+      if (href.startsWith('#')) {
+        // Scroll to section on the same page
+        const targetElement = document.querySelector(href);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else if (href.startsWith('/')) {
+        // Navigation to a different page
+        window.location.href = href;
       }
     }
   };

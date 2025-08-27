@@ -18,6 +18,8 @@ export interface Highlight {
   selectedText: string;
   color: string;
   createdAt: Date;
+  question?: string;
+  questionId?: string;
 }
 
 interface HighlightState {
@@ -29,6 +31,8 @@ interface HighlightState {
 type HighlightAction =
   | { type: 'ADD_HIGHLIGHT'; payload: Highlight }
   | { type: 'REMOVE_HIGHLIGHT'; payload: string }
+  | { type: 'ADD_QUESTION_TO_HIGHLIGHT'; payload: { highlightId: string; question: string; questionId: string } }
+  | { type: 'REMOVE_QUESTION_FROM_HIGHLIGHT'; payload: string }
   | { type: 'LOAD_HIGHLIGHTS'; payload: Highlight[] }
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_ERROR'; payload: string | null };
@@ -51,6 +55,26 @@ function highlightReducer(state: HighlightState, action: HighlightAction): Highl
       return {
         ...state,
         highlights: state.highlights.filter(h => h.id !== action.payload),
+        error: null,
+      };
+    case 'ADD_QUESTION_TO_HIGHLIGHT':
+      return {
+        ...state,
+        highlights: state.highlights.map(h => 
+          h.id === action.payload.highlightId 
+            ? { ...h, question: action.payload.question, questionId: action.payload.questionId }
+            : h
+        ),
+        error: null,
+      };
+    case 'REMOVE_QUESTION_FROM_HIGHLIGHT':
+      return {
+        ...state,
+        highlights: state.highlights.map(h => 
+          h.id === action.payload 
+            ? { ...h, question: undefined, questionId: undefined }
+            : h
+        ),
         error: null,
       };
     case 'LOAD_HIGHLIGHTS':
@@ -80,6 +104,8 @@ interface HighlightContextType {
   state: HighlightState;
   addHighlight: (highlight: Omit<Highlight, 'id' | 'createdAt'>) => void;
   removeHighlight: (id: string) => void;
+  addQuestionToHighlight: (highlightId: string, question: string, questionId: string) => void;
+  removeQuestionFromHighlight: (highlightId: string) => void;
   getHighlightsForPage: (pageNumber: number) => Highlight[];
 }
 
@@ -153,6 +179,17 @@ export function HighlightContextProvider({ children, documentUrl }: HighlightPro
     dispatch({ type: 'REMOVE_HIGHLIGHT', payload: id });
   };
 
+  const addQuestionToHighlight = (highlightId: string, question: string, questionId: string) => {
+    dispatch({ 
+      type: 'ADD_QUESTION_TO_HIGHLIGHT', 
+      payload: { highlightId, question, questionId } 
+    });
+  };
+
+  const removeQuestionFromHighlight = (highlightId: string) => {
+    dispatch({ type: 'REMOVE_QUESTION_FROM_HIGHLIGHT', payload: highlightId });
+  };
+
   const getHighlightsForPage = (pageNumber: number) => {
     return state.highlights.filter(h => h.pageNumber === pageNumber);
   };
@@ -161,6 +198,8 @@ export function HighlightContextProvider({ children, documentUrl }: HighlightPro
     state,
     addHighlight,
     removeHighlight,
+    addQuestionToHighlight,
+    removeQuestionFromHighlight,
     getHighlightsForPage,
   };
 
@@ -187,6 +226,8 @@ export function useHighlightActions() {
   return {
     addHighlight: context.addHighlight,
     removeHighlight: context.removeHighlight,
+    addQuestionToHighlight: context.addQuestionToHighlight,
+    removeQuestionFromHighlight: context.removeQuestionFromHighlight,
     getHighlightsForPage: context.getHighlightsForPage,
   };
 }

@@ -27,7 +27,7 @@ const socialLinks = [
 
 export const LandingFooter: React.FC = () => {
   return (
-    <footer className="w-full bg-background border-t border-white/10">
+    <footer className="w-full bg-black border-t border-white/10">
       <div className="container mx-auto px-6 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           <div className="lg:col-span-4">

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, Poppins } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import "@/components/writing/editor-styles.css"; // Import the editor styles
 import { cn } from "@/lib/utils";
 import { ToastProvider } from "@/hooks/use-toast";
 
-const fontSans = Poppins({
+const fontSans = Inter({
   subsets: ["latin"],
   display: "swap",
   weight: ["400", "500", "600", "700"],

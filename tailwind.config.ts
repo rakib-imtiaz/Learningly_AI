@@ -29,9 +29,14 @@ const config: Config = {
     },
     extend: {
       colors: {
-        "electric-blue": "#007BFF",
-        "purple": "#8A2BE2",
-        "lime-green": "#32CD32",
+        /* ChatGPT-inspired color utilities */
+        "chatgpt-bg": "hsl(var(--chatgpt-bg))",
+        "chatgpt-border": "hsl(var(--chatgpt-border))",
+        "chatgpt-text-primary": "hsl(var(--chatgpt-text-primary))",
+        "chatgpt-text-secondary": "hsl(var(--chatgpt-text-secondary))",
+        "chatgpt-accent": "hsl(var(--chatgpt-accent))",
+        "chatgpt-muted": "hsl(var(--chatgpt-muted))",
+        
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -96,8 +101,8 @@ const config: Config = {
         "marquee-vertical": "marquee-vertical var(--duration) linear infinite",
       },
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
-        heading: ["var(--font-heading)", ...fontFamily.sans],
+        sans: ["Inter", "var(--font-sans)", ...fontFamily.sans],
+        heading: ["Inter", "var(--font-heading)", ...fontFamily.sans],
       },
     },
   },

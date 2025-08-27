@@ -34,21 +34,21 @@ export default function AppSidebar({
       className={`
         fixed h-screen
         ${isMobile ? 'flex' : 'hidden sm:flex'}
-        flex-col bg-[#1C1C1C] text-white z-40 transition-all duration-300
+        flex-col bg-card text-card-foreground border-r border-border z-40 transition-all duration-300
         ${sidebarCollapsed ? 'w-[70px]' : 'w-[270px]'}
         ${isMobile ? 'w-full' : ''}
       `}
     >
       {/* Logo */}
-      <div className={`flex items-center p-4 border-b border-white/10 ${sidebarCollapsed ? 'justify-center' : 'justify-between'}`}>
+      <div className={`flex items-center p-4 border-b border-border ${sidebarCollapsed ? 'justify-center' : 'justify-between'}`}>
         {!sidebarCollapsed && (
           <div className="flex items-center space-x-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-green-400 to-teal-500">
-              <BrainCircuit className="h-5 w-5 text-black" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+              <BrainCircuit className="h-5 w-5 text-primary-foreground" />
             </div>
             <div>
-              <div className="text-base font-bold">Learningly</div>
-              <div className="text-xs text-gray-400">AI Learning Platform</div>
+              <div className="text-base font-semibold text-foreground">Learningly</div>
+              <div className="text-xs text-muted-foreground">AI Learning Platform</div>
             </div>
           </div>
         )}
@@ -57,7 +57,7 @@ export default function AppSidebar({
             variant="ghost"
             size="sm"
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="text-gray-400 hover:text-white"
+            className="text-muted-foreground hover:text-foreground"
           >
             <Menu className="h-5 w-5" />
           </Button>
@@ -69,7 +69,7 @@ export default function AppSidebar({
         <div>
           {/* Main Features */}
           {!sidebarCollapsed && (
-            <div className="text-xs font-semibold text-gray-400 mb-2 px-3 mt-4">FEATURES</div>
+            <div className="text-xs font-semibold text-muted-foreground mb-2 px-3 mt-4">FEATURES</div>
           )}
           <nav className="space-y-1 mt-2">
             {navigationItems.map((item) => (
@@ -77,7 +77,7 @@ export default function AppSidebar({
                 <div
                   className={`
                     ${commonClasses}
-                    ${item.active ? 'bg-green-600/90 text-white' : 'text-gray-300 hover:bg-white/10 hover:text-white'}
+                    ${item.active ? 'bg-accent text-accent-foreground' : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'}
                     ${sidebarCollapsed ? 'justify-center' : ''}
                   `}
                 >
@@ -90,12 +90,12 @@ export default function AppSidebar({
 
           {/* Workspace */}
           {!sidebarCollapsed && (
-            <div className="text-xs font-semibold text-gray-400 mb-2 px-3 mt-6">WORKSPACE</div>
+            <div className="text-xs font-semibold text-muted-foreground mb-2 px-3 mt-6">WORKSPACE</div>
           )}
           <nav className="space-y-1 mt-2">
             {workspaceItems.map((item) => (
               <Link key={item.href} href={item.href}>
-                <div className={`${commonClasses} text-gray-300 hover:bg-white/10 hover:text-white ${sidebarCollapsed ? 'justify-center' : ''}`}>
+                <div className={`${commonClasses} text-muted-foreground hover:bg-accent hover:text-accent-foreground ${sidebarCollapsed ? 'justify-center' : ''}`}>
                   <item.icon className="h-5 w-5" />
                   {!sidebarCollapsed && <span>{item.label}</span>}
                 </div>
@@ -105,15 +105,15 @@ export default function AppSidebar({
         </div>
 
         {/* Settings & Logout */}
-        <div className="p-2 border-t border-white/10">
+        <div className="p-2 border-t border-border">
           <Link href="/settings">
-            <div className={`${commonClasses} text-gray-300 hover:bg-white/10 hover:text-white ${sidebarCollapsed ? 'justify-center' : ''}`}>
+            <div className={`${commonClasses} text-muted-foreground hover:bg-accent hover:text-accent-foreground ${sidebarCollapsed ? 'justify-center' : ''}`}>
               <Settings className="h-5 w-5" />
               {!sidebarCollapsed && <span>Settings</span>}
             </div>
           </Link>
           <Link href="/">
-            <div className={`${commonClasses} text-gray-300 hover:bg-white/10 hover:text-white ${sidebarCollapsed ? 'justify-center' : ''}`}>
+            <div className={`${commonClasses} text-muted-foreground hover:bg-accent hover:text-accent-foreground ${sidebarCollapsed ? 'justify-center' : ''}`}>
               <LogOut className="h-5 w-5" />
               {!sidebarCollapsed && <span>Logout</span>}
             </div>
