@@ -3,10 +3,10 @@ import { createClient } from '@/lib/supabase-server'
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const conversationId = params.id
+    const { id: conversationId } = await params
     const supabase = await createClient()
 
     // Delete the conversation (messages will be deleted automatically due to CASCADE)

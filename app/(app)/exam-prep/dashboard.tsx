@@ -26,10 +26,36 @@ interface Session {
   time: string;
 }
 
+interface QuizData {
+  questions: Array<{ prompt: string; answer: string; type: string; choices?: string[] }>;
+}
+
+interface FlashcardData {
+  cards: Array<{ front: string; back: string }>;
+}
+
+interface MemeData {
+  topText: string;
+  bottomText: string;
+}
+
 interface GeneratedContent {
   mode: 'quiz' | 'flashcards' | 'meme';
   topic: string;
-  data?: Record<string, unknown>;
+  data?: QuizData | FlashcardData | MemeData;
+}
+
+// Type guards
+function isQuizData(data: any): data is QuizData {
+  return data && Array.isArray(data.questions);
+}
+
+function isFlashcardData(data: any): data is FlashcardData {
+  return data && Array.isArray(data.cards);
+}
+
+function isMemeData(data: any): data is MemeData {
+  return data && typeof data.topText === 'string' && typeof data.bottomText === 'string';
 }
 
 // Components
@@ -341,7 +367,7 @@ export default function ExamPrepDashboard() {
                     <div className="text-sm text-slate-600">Topic: <span className="font-medium">{generated.topic}</span></div>
                     <div className="rounded-xl border p-3 bg-white">
                       <div className="text-xs text-slate-500">First question</div>
-                      <div className="mt-1 text-sm">{generated.data?.questions?.[0]?.prompt || 'Example: Every C program begins from the main function.'}</div>
+                      <div className="mt-1 text-sm">{isQuizData(generated.data) && generated.data.questions[0]?.prompt || 'Example: Every C program begins from the main function.'}</div>
                     </div>
                   </div>
                 )}
@@ -349,7 +375,7 @@ export default function ExamPrepDashboard() {
                   <div className="space-y-2">
                     <div className="text-sm text-slate-600">Topic: <span className="font-medium">{generated.topic}</span></div>
                     <div className="grid sm:grid-cols-3 gap-2">
-                      {(generated.data?.cards || [{front:'Pointer',back:'address var'}, {front:'main()',back:'entry'}, {front:'&',back:'address-of'}]).slice(0,3).map((c, i) => (
+                      {(isFlashcardData(generated.data) ? generated.data.cards : [{front:'Pointer',back:'address var'}, {front:'main()',back:'entry'}, {front:'&',back:'address-of'}]).slice(0,3).map((c, i) => (
                         <div key={i} className="rounded-xl border p-3 text-sm bg-white">{c.front}</div>
                       ))}
                     </div>
@@ -361,10 +387,10 @@ export default function ExamPrepDashboard() {
                     <div className="rounded-xl border overflow-hidden">
                       <div className="aspect-[4/3] grid grid-rows-2">
                         <div className="grid place-items-center text-center px-3 bg-gradient-to-br from-indigo-100 to-indigo-300">
-                          <span className="font-bold text-lg sm:text-xl drop-shadow">{generated.data?.topText || `${generated.topic} explained`}</span>
+                          <span className="font-bold text-lg sm:text-xl drop-shadow">{isMemeData(generated.data) ? generated.data.topText : `${generated.topic} explained`}</span>
                         </div>
                         <div className="grid place-items-center text-center px-3 bg-gradient-to-tr from-rose-100 to-rose-300">
-                          <span className="font-bold text-lg sm:text-xl drop-shadow">{generated.data?.bottomText || 'Memory hook: teach it to a friend'}</span>
+                          <span className="font-bold text-lg sm:text-xl drop-shadow">{isMemeData(generated.data) ? generated.data.bottomText : 'Memory hook: teach it to a friend'}</span>
                         </div>
                       </div>
                     </div>

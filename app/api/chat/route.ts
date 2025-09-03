@@ -62,12 +62,12 @@ export async function POST(request: NextRequest) {
 
     // Prepare conversation context for AI
     const conversationHistory = messages.map(msg => ({
-      role: msg.role === 'user' ? 'user' : 'assistant',
+      role: msg.role === 'user' ? 'user' as const : 'assistant' as const,
       content: msg.content
     }));
 
     // Add the new user message
-    conversationHistory.push({ role: 'user', content: message });
+    conversationHistory.push({ role: 'user' as const, content: message });
 
     let aiResponse: string;
     let tokensUsed: number = 0;

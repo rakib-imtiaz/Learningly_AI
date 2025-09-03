@@ -54,9 +54,7 @@ export function Markdown({children}: {children: string}) {
           rehypeKatex,
           rehypeHighlight,
         ]}
-        onError={(error) => {
-          console.error('ReactMarkdown error:', error);
-        }}
+
         components={{
           h1: (p) => <h1 className="text-2xl font-bold mt-4 mb-2 text-slate-900" {...p} />,
           h2: (p) => <h2 className="text-xl font-semibold mt-3 mb-2 text-slate-900" {...p} />,
@@ -80,7 +78,8 @@ export function Markdown({children}: {children: string}) {
             <img {...p} className="max-w-full rounded-lg border border-gray-200" />
           ),
           hr: (p) => <hr className="my-6 border-gray-200" {...p} />,
-          code: ({inline, className, children, ...props}) => {
+          code: (props: any) => {
+            const { inline, className, children, ...restProps } = props;
             if (inline) {
               return (
                 <code className="bg-gray-100 px-1 py-0.5 rounded text-slate-900" {...props}>
@@ -110,7 +109,7 @@ export function Markdown({children}: {children: string}) {
                   {copied === idx ? "Copied" : "Copy"}
                 </button>
                 <pre className="bg-gray-900 text-gray-100 rounded-lg overflow-x-auto p-3 relative">
-                  <code className={`${className} text-gray-100`} {...props}>{children}</code>
+                  <code className={`${className} text-gray-100`} {...restProps}>{children}</code>
                 </pre>
                 {lang && <div className="absolute right-2 bottom-2 text-[10px] text-gray-300">{lang}</div>}
               </div>
