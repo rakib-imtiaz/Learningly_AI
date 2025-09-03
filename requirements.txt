@@ -1,0 +1,11 @@
+# Manim Community Edition for mathematical animations
+# Using 0.19.0 which is compatible with Python 3.13
+manim==0.19.0
+
+# Additional dependencies for enhanced functionality
+numpy>=1.21.0
+pillow>=8.3.0
+scipy>=1.7.0
+
+# Optional: For better performance (may need to be installed separately on Windows)
+# pycairo>=1.20.0

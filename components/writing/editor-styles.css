@@ -1,0 +1,105 @@
+.rdw-editor-toolbar {
+  padding: 6px 5px 0;
+  border-radius: 2px;
+  border: 1px solid #F1F1F1;
+  display: flex;
+  justify-content: flex-start;
+  background: white;
+  flex-wrap: wrap;
+  font-size: 15px;
+  margin-bottom: 5px;
+  user-select: none;
+}
+
+.rdw-editor-main {
+  height: 100%;
+  overflow: auto;
+  box-sizing: border-box;
+  flex-grow: 1;
+  min-height: 200px;
+}
+
+.rdw-editor-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.wrapper-class {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.editor-class {
+  background-color: white;
+  padding: 1rem;
+  min-height: 200px;
+  height: 100%;
+}
+
+.read-only .rdw-editor-toolbar {
+  display: none;
+}
+
+.toolbar-class {
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.editor-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Fix font size and dropdown issues */
+.rdw-dropdown-wrapper {
+  height: auto !important;
+  min-width: 40px !important;
+  z-index: 100 !important;
+  position: relative !important;
+}
+
+.rdw-dropdown-optionwrapper {
+  max-height: 200px !important;
+  overflow-y: auto !important;
+  z-index: 101 !important; 
+  position: absolute !important;
+  left: 0 !important;
+  top: 100% !important;
+  width: auto !important;
+  min-width: 100% !important;
+}
+
+.fontsize-dropdown {
+  min-width: 60px !important;
+}
+
+.blocktype-dropdown {
+  min-width: 100px !important;
+}
+
+/* Fix font size display */
+.rdw-fontsize-dropdown {
+  min-width: 60px !important;
+}
+
+/* Fix for menu overflows */
+.rdw-editor-toolbar {
+  overflow: visible !important;
+}
+
+/* Make toolbar buttons more visible on hover */
+.rdw-option-wrapper:hover {
+  box-shadow: 1px 1px 0px #bfbdbd !important;
+  background-color: #f1f1f1 !important;
+}
+
+.rdw-option-active {
+  box-shadow: 1px 1px 0px #bfbdbd !important;
+  background-color: #f1f1f1 !important;
+}

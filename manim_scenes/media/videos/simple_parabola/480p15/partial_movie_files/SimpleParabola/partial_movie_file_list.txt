@@ -1,0 +1,13 @@
+# This file is used internally by FFMPEG.
+file 'file:C:/Users/alsha/OneDrive/Desktop/rakib/learninglyAi/learning/manim_scenes/media/videos/simple_parabola/480p15/partial_movie_files/SimpleParabola/1185818338_3454688621_223132457.mp4'
+file 'file:C:/Users/alsha/OneDrive/Desktop/rakib/learninglyAi/learning/manim_scenes/media/videos/simple_parabola/480p15/partial_movie_files/SimpleParabola/624642324_3201849554_1866614353.mp4'
+file 'file:C:/Users/alsha/OneDrive/Desktop/rakib/learninglyAi/learning/manim_scenes/media/videos/simple_parabola/480p15/partial_movie_files/SimpleParabola/624642324_1885315484_2937351441.mp4'
+file 'file:C:/Users/alsha/OneDrive/Desktop/rakib/learninglyAi/learning/manim_scenes/media/videos/simple_parabola/480p15/partial_movie_files/SimpleParabola/624642324_1839128356_1193155980.mp4'
+file 'file:C:/Users/alsha/OneDrive/Desktop/rakib/learninglyAi/learning/manim_scenes/media/videos/simple_parabola/480p15/partial_movie_files/SimpleParabola/624642324_2310397138_3860956800.mp4'
+file 'file:C:/Users/alsha/OneDrive/Desktop/rakib/learninglyAi/learning/manim_scenes/media/videos/simple_parabola/480p15/partial_movie_files/SimpleParabola/624642324_1839128356_3168936223.mp4'
+file 'file:C:/Users/alsha/OneDrive/Desktop/rakib/learninglyAi/learning/manim_scenes/media/videos/simple_parabola/480p15/partial_movie_files/SimpleParabola/624642324_3848181138_1043978694.mp4'
+file 'file:C:/Users/alsha/OneDrive/Desktop/rakib/learninglyAi/learning/manim_scenes/media/videos/simple_parabola/480p15/partial_movie_files/SimpleParabola/624642324_1839128356_3572180280.mp4'
+file 'file:C:/Users/alsha/OneDrive/Desktop/rakib/learninglyAi/learning/manim_scenes/media/videos/simple_parabola/480p15/partial_movie_files/SimpleParabola/624642324_52530910_1136358719.mp4'
+file 'file:C:/Users/alsha/OneDrive/Desktop/rakib/learninglyAi/learning/manim_scenes/media/videos/simple_parabola/480p15/partial_movie_files/SimpleParabola/624642324_1839128356_3299417408.mp4'
+file 'file:C:/Users/alsha/OneDrive/Desktop/rakib/learninglyAi/learning/manim_scenes/media/videos/simple_parabola/480p15/partial_movie_files/SimpleParabola/624642324_494359997_3703144143.mp4'
+file 'file:C:/Users/alsha/OneDrive/Desktop/rakib/learninglyAi/learning/manim_scenes/media/videos/simple_parabola/480p15/partial_movie_files/SimpleParabola/624642324_2408024828_3559574048.mp4'
