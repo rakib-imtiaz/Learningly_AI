@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import ExamPrepDashboard from "./dashboard";
 
@@ -294,11 +294,11 @@ function Meme({ topic, setTopic }: { topic: string; setTopic: (topic: string) =>
   );
 }
 
-export default function ExamPrepPage() {
+function ExamPrepPageContent() {
   const searchParams = useSearchParams();
   const modeParam = searchParams.get('mode');
   const topicParam = searchParams.get('topic');
-  
+
   // If we have mode/topic params, show interactive view
   const showInteractive = !!(modeParam || topicParam);
 
@@ -308,6 +308,14 @@ export default function ExamPrepPage() {
 
   // Default to dashboard view
   return <ExamPrepDashboard />;
+}
+
+export default function ExamPrepPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ExamPrepPageContent />
+    </Suspense>
+  );
 }
 
 // Interactive component (renamed from the original)

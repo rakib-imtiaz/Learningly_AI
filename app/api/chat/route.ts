@@ -6,12 +6,28 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Initialize AI clients
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
 });
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY!);
 
 export async function POST(request: NextRequest) {
+  // Build-time safety check - return early if we're in a build environment without API keys
+  if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_OPENAI_API_KEY && !process.env.GOOGLE_AI_API_KEY) {
+    return NextResponse.json(
+      { error: 'AI API keys not configured' },
+      { status: 500 }
+    );
+  }
+
+  // During build time, return a placeholder response to prevent build failures
+  if (process.env.NODE_ENV !== 'production' && (!process.env.NEXT_PUBLIC_OPENAI_API_KEY || !process.env.GOOGLE_AI_API_KEY)) {
+    return NextResponse.json(
+      { error: 'API keys not available during build' },
+      { status: 503 }
+    );
+  }
+
   try {
     // Verify authentication
     const supabase = createRouteHandlerClient({ cookies });

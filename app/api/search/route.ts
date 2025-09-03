@@ -25,6 +25,14 @@ const openai = new OpenAI({
 })
 
 export async function POST(request: NextRequest) {
+  // Build-time safety check - return early if we're in a build environment without API keys
+  if (process.env.NODE_ENV !== 'production' && (!process.env.NEXT_PUBLIC_GOOGLE_API_KEY || !process.env.NEXT_PUBLIC_OPENAI_API_KEY)) {
+    return NextResponse.json(
+      { error: 'API keys not available during build' },
+      { status: 503 }
+    );
+  }
+
   const startTime = Date.now()
   console.log('🔍 [SEARCH API] POST request started')
 

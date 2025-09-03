@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
+  // Build-time safety check - return early if we're in a build environment without API keys
+  if (process.env.NODE_ENV !== 'production' && !process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
+    return NextResponse.json(
+      { error: 'API keys not available during build' },
+      { status: 503 }
+    );
+  }
+
   try {
     const { text, documentTitle } = await req.json();
 
@@ -12,7 +20,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Use OpenAI API for summarization
-    const openaiApiKey = process.env.OPENAI_API_KEY;
+    const openaiApiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
     
     if (!openaiApiKey) {
       return NextResponse.json(
