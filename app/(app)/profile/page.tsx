@@ -68,7 +68,7 @@ const ProfilePage = () => {
       
       showSuccess("Profile updated successfully")
       setIsEditing(false)
-    } catch (error: any) {
+    } catch (error: unknown) {
       showError(error.message || "Failed to update profile")
     } finally {
       setLoading(false)

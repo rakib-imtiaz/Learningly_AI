@@ -3,7 +3,6 @@
 import * as React from "react"
 import {
   Upload,
-  FileText,
   BookOpen,
   Search,
   Brain,
@@ -16,7 +15,7 @@ import {
   Plus,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
 
@@ -110,7 +109,7 @@ const ReadingPage = () => {
             <div className="max-w-2xl mx-auto mb-16">
               <div className="relative">
                 <Input 
-                  placeholder="Ask me anything or describe what you'd like to learn..." 
+                  placeholder="Ask me anything or describe what you&apos;d like to learn..." 
                   className="h-14 text-lg pl-6 pr-32 border-2 border-gray-200 focus:border-blue-500 rounded-2xl shadow-sm bg-white/80 backdrop-blur-sm transition-all duration-200"
                 />
                 <Button className="absolute right-2 top-2 h-10 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl transition-all duration-200 shadow-lg">
@@ -124,7 +123,7 @@ const ReadingPage = () => {
           <div className="mb-20">
             <div className="text-center mb-12">
               <h3 className="text-3xl font-bold text-gray-900 mb-4">Get Started</h3>
-              <p className="text-lg text-gray-600">Choose how you'd like to add your content</p>
+              <p className="text-lg text-gray-600">Choose how you&apos;d like to add your content</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {uploadOptions.map((option, index) => (

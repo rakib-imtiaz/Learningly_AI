@@ -1,20 +1,16 @@
 "use client"
 
 import * as React from "react"
-import { Send, Bot, User, Copy, ThumbsUp, ThumbsDown, RotateCcw, Sparkles, Search, FileText, MessageSquare, Plus, Trash2, Mic, Menu, Square, ChevronRight, Zap, Brain, X } from "lucide-react"
+import { Send, Bot, Copy, ThumbsUp, ThumbsDown, RotateCcw, Sparkles, Search, Plus, Trash2, Mic, Square, ChevronRight, Zap, Brain, X, Menu, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { motion, AnimatePresence } from "framer-motion"
 
 import { useAuthContext } from "@/components/auth/auth-provider"
 import { Markdown } from "@/components/ui/markdown"
 import { toast } from "sonner"
 import { useChat } from "@/hooks/use-chat"
-import { ChatConversation, ChatMessage } from "@/types/chat"
+import { ChatMessage } from "@/types/chat"
 
 interface Message {
   id: string
@@ -51,14 +47,11 @@ const SearchPage = () => {
   // Use the Supabase chat hook for conversation management
   const {
     conversations: supabaseConversations,
-    currentConversation,
     messages: supabaseMessages,
-    isLoading: supabaseLoading,
     error: chatError,
     createConversation,
     selectConversation,
     sendMessage: supabaseSendMessage,
-    updateConversation,
     deleteConversation,
     clearError
   } = useChat()
@@ -83,7 +76,6 @@ const SearchPage = () => {
   const [showModelMenu, setShowModelMenu] = React.useState(false)
   const [abortController, setAbortController] = React.useState<AbortController | null>(null)
   const scrollAreaRef = React.useRef<HTMLDivElement>(null)
-  const inputRef = React.useRef<HTMLInputElement>(null)
 
   const scrollToBottom = () => {
     if (scrollAreaRef.current) {
@@ -496,12 +488,7 @@ const SearchPage = () => {
     setCurrentMessage('')
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSendMessage()
-    }
-  }
+
 
   // Map new model names to database-allowed model names
   const mapModelToDatabaseModel = (model: string): 'gpt-4' | 'gpt-3.5-turbo' | 'gemini-pro' | 'claude' => {
@@ -547,21 +534,7 @@ const SearchPage = () => {
     })
   }
 
-  // Handle model changes
-  const handleModelChange = (model: 'gemini-2.5-flash' | 'gpt-5-mini' | 'gpt-5' | 'gpt-5-nano' | 'gemini-2.5-pro' | 'gemini-2.5-flash-lite' | 'gpt-5-thinking-pro') => {
-    console.log('Model changed from', selectedModel, 'to', model)
-    setSelectedModel(model as any) // Type assertion for now to handle the expanded model types
-    const modelNames = {
-      'gemini-2.5-flash': 'Gemini 2.5 Flash',
-      'gpt-5-mini': 'GPT-5 Mini',
-      'gpt-5': 'GPT-5',
-      'gpt-5-nano': 'GPT-5 Nano',
-      'gemini-2.5-pro': 'Gemini 2.5 Pro',
-      'gemini-2.5-flash-lite': 'Gemini 2.5 Flash Lite',
-      'gpt-5-thinking-pro': 'GPT-5 Thinking Pro'
-    }
-    toast.success(`Switched to ${modelNames[model] || model}`)
-  }
+
 
   const handleConversationSelect = (conversationId: string | null) => {
     if (loading || !user?.id) {
@@ -682,13 +655,7 @@ const SearchPage = () => {
     }
   }
 
-  const getModelIcon = (model: 'gemini-2.5-flash' | 'gpt-5-mini') => {
-    return model.startsWith('gemini') ? Sparkles : Bot
-  }
 
-  const getModelColor = (model: 'gemini-2.5-flash' | 'gpt-5-mini') => {
-    return model.startsWith('gemini') ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700'
-  }
 
   return (
     <div className="h-screen w-full bg-gradient-to-b from-slate-50 to-white text-slate-900">

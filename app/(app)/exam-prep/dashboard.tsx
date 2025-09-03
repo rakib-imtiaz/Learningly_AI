@@ -29,7 +29,7 @@ interface Session {
 interface GeneratedContent {
   mode: 'quiz' | 'flashcards' | 'meme';
   topic: string;
-  data?: any;
+  data?: Record<string, unknown>;
 }
 
 // Components
@@ -211,7 +211,7 @@ export default function ExamPrepDashboard() {
 
   const recents = ["Pointers", "Arrays", "Functions", "Memory Management"];
 
-  async function postJSON(path: string, payload?: any) {
+  async function postJSON(path: string, payload?: Record<string, unknown>) {
     const res = await fetch(path, { 
       method: 'POST', 
       headers: { 'Content-Type': 'application/json' }, 

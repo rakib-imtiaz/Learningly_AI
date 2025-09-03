@@ -68,7 +68,7 @@ function routeIntent(text: string) {
   return { action: "chat" };
 }
 
-async function postJSON(path: string, payload?: any) {
+async function postJSON(path: string, payload?: Record<string, unknown>) {
   const res = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload || {}) });
   if (!res.ok) throw new Error(`Request failed: ${res.status}`);
   return res.json();
@@ -103,7 +103,7 @@ function Quiz({ topic }: { topic: string }) {
   const [loading, setLoading] = useState(false);
   const q = quiz.questions[idx];
 
-  function normalize(s: any): string { return (s||"").toString().trim().toLowerCase(); }
+  function normalize(s: unknown): string { return (s||"").toString().trim().toLowerCase(); }
 
   async function generateWithAI() {
     try {
@@ -265,7 +265,7 @@ function Meme({ topic, setTopic }: { topic: string; setTopic: (topic: string) =>
 
   return (
     <div className="rounded-2xl border p-5 bg-white">
-      <div className="text-sm text-slate-600 mb-3">Enter a topic and I'll generate a meme-style caption to help you memorize it.</div>
+      <div className="text-sm text-slate-600 mb-3">Enter a topic and I&apos;ll generate a meme-style caption to help you memorize it.</div>
 
       <div className="flex flex-col sm:flex-row gap-2 mb-4">
         <input value={topic} onChange={(e) => setTopic(e.target.value)} placeholder="e.g., Pointers, Loops, Memory management" className="flex-1 rounded-xl border px-3 py-2"/>
